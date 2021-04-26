@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   viewBox="0 0 270.93333 270.93334"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="tiles.svg"
+   inkscape:export-filename="D:\Projects\experiments\robodaniel\art\tiles.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="532.1796"
+     inkscape:cy="715.73724"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid815"
+       spacingx="4.2333334"
+       spacingy="4.2333334"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-26.06665)">
+    <rect
+       style="fill:#c18845;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4520"
+       width="16.933332"
+       height="16.933332"
+       x="0"
+       y="26.066647" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#7a4408;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="0.83154738"
+       y="35.856232"
+       id="text4524"><tspan
+         sodipodi:role="line"
+         id="tspan4522"
+         x="0.83154738"
+         y="35.856232"
+         style="fill:#7a4408;fill-opacity:1;stroke-width:0.26458332">Ground</tspan></text>
+    <rect
+       style="fill:#43d0cd;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4526"
+       width="16.933332"
+       height="16.933332"
+       x="16.933332"
+       y="26.066647" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#136c63;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="21.07601"
+       y="35.869663"
+       id="text4530"><tspan
+         sodipodi:role="line"
+         id="tspan4528"
+         x="21.07601"
+         y="35.869663"
+         style="stroke-width:0.26458332;fill:#136c63;fill-opacity:1;">Sky</tspan></text>
+    <rect
+       style="fill:#312dd7;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4532"
+       width="8.4666662"
+       height="16.933332"
+       x="38.099998"
+       y="26.066647" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="37.966362"
+       y="35.712185"
+       id="text4536"><tspan
+         sodipodi:role="line"
+         id="tspan4534"
+         x="37.966362"
+         y="35.712185"
+         style="font-size:3.52777767px;stroke-width:0.26458332">Hero</tspan></text>
+    <circle
+       style="fill:#d7d433;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4538"
+       cx="59.266666"
+       cy="34.533314"
+       r="4.2333331" />
+    <path
+       sodipodi:type="star"
+       style="fill:#d7333a;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4540"
+       sodipodi:sides="5"
+       sodipodi:cx="76.199997"
+       sodipodi:cy="34.533314"
+       sodipodi:r1="5.9868374"
+       sodipodi:r2="4.8434534"
+       sodipodi:arg1="-0.78539816"
+       sodipodi:arg2="-0.15707963"
+       inkscape:flatsided="true"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 80.43333,30.29998 1.100978,6.951301 -6.270859,3.195162 -4.976582,-4.976582 3.195163,-6.270858 z"
+       inkscape:transform-center-x="0.28941013"
+       inkscape:transform-center-y="0.28940906" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="55.501053"
+       y="35.535576"
+       id="text4544"><tspan
+         sodipodi:role="line"
+         id="tspan4542"
+         x="55.501053"
+         y="35.535576"
+         style="font-size:3.17499995px;fill:#8c8446;fill-opacity:1;stroke-width:0.26458332">Coin</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="71.164856"
+       y="35.468758"
+       id="text4548"><tspan
+         sodipodi:role="line"
+         id="tspan4546"
+         x="71.164856"
+         y="35.468758"
+         style="font-size:2.82222223px;fill:#7c2b2b;fill-opacity:1;stroke-width:0.26458332">Enemy</tspan></text>
+  </g>
+</svg>
