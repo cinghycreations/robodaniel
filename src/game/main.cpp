@@ -17,6 +17,7 @@ int main()
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplRaylib_Init();
+	Texture2D fontTexture;
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		unsigned char* pixels = NULL;
@@ -33,8 +34,8 @@ int main()
 		image.data = RL_MALLOC( width * height * 4 );
 		memcpy( image.data, pixels, width * height * 4 );
 
-		Texture2D texture = LoadTextureFromImage( image );
-		io.Fonts->SetTexID( &texture.id );
+		fontTexture = LoadTextureFromImage( image );
+		io.Fonts->SetTexID( &fontTexture.id );
 		UnloadImage( image );
 	}
 
