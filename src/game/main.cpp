@@ -5,6 +5,7 @@
 #include <string>
 #include <raylib.h>
 #include <intmath.hpp>
+#include <queue>
 
 #define RAYMATH_IMPLEMENTATION
 #include <raymath.h>
@@ -12,7 +13,19 @@
 #include <imgui.h>
 #include <cimgui_impl_raylib.hpp>
 
+#pragma optimize("",off)
+
 using namespace std;
+
+enum
+{
+	Tile_Empty = -1,
+	Tile_Ground,
+	Tile_Sky,
+	Tile_Hero,
+	Tile_Coin,
+	Tile_Enemy,
+};
 
 class Tiles
 {
@@ -88,9 +101,159 @@ public:
 		return cells.at( cellIndex );
 	}
 
+	void setCellAt( const Vector2Int& coords, const int tile )
+	{
+		const int cellIndex = coords.y * size.x + coords.x;
+		cells.at( cellIndex ) = tile;
+	}
+
+	Vector2Int findFirstCell( const int tile )
+	{
+		for ( int i = 0; i < size.y; ++i )
+		{
+			for ( int j = 0; j < size.x; ++j )
+			{
+				const Vector2Int coords{ j, i };
+				if ( getCellAt( coords ) == tile )
+				{
+					return coords;
+				}
+			}
+		}
+	}
+
+	vector<Vector2Int> findAllCells( const int tile )
+	{
+		vector<Vector2Int> result;
+
+		for ( int i = 0; i < size.y; ++i )
+		{
+			for ( int j = 0; j < size.x; ++j )
+			{
+				const Vector2Int coords{ j, i };
+				if ( getCellAt( coords ) == tile )
+				{
+					result.push_back( coords );
+				}
+			}
+		}
+
+		return result;
+	}
+
 private:
 	Vector2Int size;
 	vector<int> cells;
+};
+
+class Pathfinder
+{
+private:
+
+	struct Move
+	{
+		string description;
+		vector<Vector2Int> steps;
+	};
+
+	const vector<Move> moves
+	{
+		{ "Forward", { { 1, 0 } } },
+		{ "Long Jump", { { 1, -1 }, { 2, -1 }, { 3, 0 } } },
+		{ "High Jump", { { 0, -1 }, { 0, -2 }, { 0, -3 }, { 1, -3 } } },
+	};
+
+public:
+	Pathfinder( const Tiles& _tiles, const Map& _map ) : tiles( _tiles ), map( _map ) { }
+
+	vector<Vector2Int> goTo( const Vector2Int& currentPosition, const Vector2Int& destination )
+	{
+		if ( Vector2IntEqual( currentPosition, destination ) )
+		{
+			return vector<Vector2Int>();
+		}
+
+		struct CellState
+		{
+			int shortestPath = -1;
+			Vector2Int previousPosition;
+			vector<Vector2Int> trajectoryFromPreviousPosition;
+		};
+
+		vector<CellState> cellStates( map.getSize().x * map.getSize().y );
+		auto cellAt = [ &cellStates, mapWidth = map.getSize().x ]( const Vector2Int& position )->CellState& { return cellStates.at( position.y * mapWidth + position.x ); };
+
+		queue<Vector2Int> positionsToVisit;
+		cellAt( currentPosition ).shortestPath = 0;
+		positionsToVisit.push( currentPosition );
+
+		while ( !positionsToVisit.empty() )
+		{
+			Vector2Int position = positionsToVisit.front();
+			positionsToVisit.pop();
+
+			CellState& currentCell = cellAt( position );
+			for ( const Move& move : moves )
+			{
+				vector<Vector2Int> trajectory;
+
+				for ( const Vector2Int& delta : move.steps )
+				{
+					const Vector2Int stepPosition = Vector2IntAdd( position, delta );
+					if ( stepPosition.x < 0 || stepPosition.x >= map.getSize().x || stepPosition.y < 0 || stepPosition.y >= map.getSize().y )
+					{
+						break;
+					}
+					if ( map.getCellAt( stepPosition ) == Tile_Ground )
+					{
+						break;
+					}
+
+					trajectory.push_back( stepPosition );
+				}
+
+				for ( int step = 0; step < trajectory.size(); ++step )
+				{
+					CellState& cell = cellAt( trajectory.at( step ) );
+					if ( cell.shortestPath == -1 || currentCell.shortestPath + step + 1 < cell.shortestPath )
+					{
+						cell.shortestPath = currentCell.shortestPath + step + 1;
+						cell.previousPosition = position;
+						cell.trajectoryFromPreviousPosition = trajectory;
+
+						if ( step == trajectory.size() - 1 )
+						{
+							positionsToVisit.push( trajectory.at( step ) );
+						}
+					}
+				}
+			}
+		}
+
+		const CellState& destinationCell = cellAt( destination );
+		if ( destinationCell.shortestPath == -1 )
+		{
+			return vector<Vector2Int>();
+		}
+
+		vector<Vector2Int> reverseTrajectory;
+		{
+			Vector2Int position = destination;
+			while ( !Vector2IntEqual( position, currentPosition ) )
+			{
+				const CellState& cell = cellAt( position );
+				reverseTrajectory.insert( reverseTrajectory.end(), cell.trajectoryFromPreviousPosition.rbegin(), cell.trajectoryFromPreviousPosition.rend() );
+				position = cell.previousPosition;
+			}
+		}
+
+		vector<Vector2Int> trajectoryToDestination( reverseTrajectory.rbegin(), reverseTrajectory.rend() );
+		return trajectoryToDestination;
+	}
+
+private:
+	const Tiles& tiles;
+	const Map& map;
 };
 
 int main()
@@ -135,6 +298,16 @@ int main()
 
 	bool enableDebugCamera = false;
 
+	Vector2Int heroTile = testbed.findFirstCell( Tile_Hero );
+	testbed.setCellAt( heroTile, Tile_Empty );
+	Vector2 heroPosition{ heroTile.x, heroTile.y };
+
+	Pathfinder pathfinder( tiles, testbed );
+
+	float secondsPerStep = 0.2f;
+	vector<Vector2Int> currentPath;
+	float progress = 0;
+
 	while ( !WindowShouldClose() )
 	{
 		ImGui_ImplRaylib_NewFrame();
@@ -166,6 +339,15 @@ int main()
 		gameplayCamera.offset = Vector2{ float( GetScreenWidth() ) / 2, float( GetScreenHeight() ) / 2 };
 		gameplayCamera.zoom = std::min<float>( float( GetScreenWidth() ) / testbed.getSize().x, float( GetScreenHeight() ) / testbed.getSize().y );
 
+		if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && !ImGui::GetIO().WantCaptureMouse )
+		{
+			const Vector2 worldPosition = GetScreenToWorld2D( GetMousePosition(), enableDebugCamera ? debugCamera : gameplayCamera );
+			const Vector2Int currentPosition{ int( heroPosition.x ), int( heroPosition.y ) };
+			const Vector2Int destination{ int( worldPosition.x ), int( worldPosition.y ) };
+			currentPath = pathfinder.goTo( currentPosition, destination );
+			progress = 0;
+		}
+
 		BeginDrawing();
 		{
 			ClearBackground( RAYWHITE );
@@ -177,10 +359,20 @@ int main()
 				for ( int j = 0; j < testbed.getSize().x; ++j )
 				{
 					const int cell = testbed.getCellAt( Vector2Int{ j, i } );
-					if ( cell != -1 )
+					if ( cell != Tile_Empty )
 					{
 						DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( cell ), Rectangle{ float( j ), float( i ), 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
 					}
+				}
+			}
+			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tile_Hero ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
+
+			if ( !currentPath.empty() )
+			{
+				DrawLineV( heroPosition, Vector2{ float( currentPath.front().x ), float( currentPath.front().y ) }, BLUE );
+				for ( int i = 0; i < currentPath.size() - 1; ++i )
+				{
+					DrawLineV( Vector2{ float( currentPath.at( i ).x ) + 0.5f, float( currentPath.at( i ).y ) + 0.5f }, Vector2{ float( currentPath.at( i + 1 ).x ) + 0.5f, float( currentPath.at( i + 1 ).y ) + 0.5f }, BLUE );
 				}
 			}
 
