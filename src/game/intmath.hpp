@@ -81,6 +81,11 @@ inline Vector2Int Vector2IntNegate( const Vector2Int& v )
 	return result;
 }
 
+inline bool Vector2IntEqual( const Vector2Int& v1, const Vector2Int& v2 )
+{
+	return v1.x == v2.x && v1.y == v2.y;
+}
+
 inline Vector3Int Vector3IntZero()
 {
 	Vector3Int result = { 0, 0, 0 };
@@ -204,4 +209,9 @@ inline Vector3Int Vector3IntMax( const Vector3Int& v1, const Vector3Int& v2 )
 	result.z = std::max<int>( v1.z, v2.z );
 
 	return result;
+}
+
+inline bool Vector3IntEqual( const Vector3Int& v1, const Vector3Int& v2 )
+{
+	return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
 }
