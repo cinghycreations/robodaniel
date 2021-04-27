@@ -17,6 +17,8 @@ using namespace std;
 class Tiles
 {
 public:
+	const int tileSize;
+
 	Tiles( const string& path, const int _tileSize ) : tileSize( _tileSize )
 	{
 		texture = LoadTexture( path.c_str() );
@@ -45,7 +47,6 @@ public:
 	}
 
 private:
-	const int tileSize;
 	Texture texture;
 	Vector2Int tilesPerSide;
 };
@@ -125,9 +126,14 @@ int main()
 	Tiles tiles( "tiles.png", 64 );
 	Map testbed( "level0.csv" );
 
-	Camera2D camera;
-	memset( &camera, 0, sizeof( Camera2D ) );
-	camera.zoom = 64;
+	Camera2D gameplayCamera;
+	memset( &gameplayCamera, 0, sizeof( Camera2D ) );
+
+	Camera2D debugCamera;
+	memset( &debugCamera, 0, sizeof( Camera2D ) );
+	debugCamera.zoom = 64.0f;
+
+	bool enableDebugCamera = false;
 
 	while ( !WindowShouldClose() )
 	{
@@ -137,27 +143,34 @@ int main()
 
 		if ( ImGui::Begin( "Game" ) )
 		{
-			if ( ImGui::TreeNode( "Camera" ) )
+			if ( ImGui::CollapsingHeader( "Camera" ) )
 			{
-				ImGui::DragFloat2( "Offset", &camera.offset.x );
-				ImGui::DragFloat2( "Target", &camera.target.x, 0.1f );
-				ImGui::DragFloat( "Rotation", &camera.rotation );
-				ImGui::DragFloat( "Zoom", &camera.zoom );
-				if ( ImGui::Button( "Reset" ) )
+				ImGui::Checkbox( "Enable Debug Camera", &enableDebugCamera );
+				if ( enableDebugCamera )
 				{
-					memset( &camera, 0, sizeof( Camera2D ) );
-					camera.zoom = 64;
+					ImGui::DragFloat2( "Offset", &debugCamera.offset.x );
+					ImGui::DragFloat2( "Target", &debugCamera.target.x, 0.1f );
+					ImGui::DragFloat( "Rotation", &debugCamera.rotation );
+					ImGui::DragFloat( "Zoom", &debugCamera.zoom );
+					if ( ImGui::Button( "Reset" ) )
+					{
+						memset( &debugCamera, 0, sizeof( Camera2D ) );
+						debugCamera.zoom = 64;
+					}
 				}
-				ImGui::TreePop();
 			}
 		}
 		ImGui::End();
+
+		gameplayCamera.target = Vector2{ float( testbed.getSize().x ) / 2, float( testbed.getSize().y ) / 2 };
+		gameplayCamera.offset = Vector2{ float( GetScreenWidth() ) / 2, float( GetScreenHeight() ) / 2 };
+		gameplayCamera.zoom = std::min<float>( float( GetScreenWidth() ) / testbed.getSize().x, float( GetScreenHeight() ) / testbed.getSize().y );
 
 		BeginDrawing();
 		{
 			ClearBackground( RAYWHITE );
 
-			BeginMode2D( camera );
+			BeginMode2D( enableDebugCamera ? debugCamera : gameplayCamera );
 
 			for ( int i = 0; i < testbed.getSize().y; ++i )
 			{
