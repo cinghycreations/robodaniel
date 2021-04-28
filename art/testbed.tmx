@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-up" width="24" height="16" tilewidth="64" tileheight="64" infinite="0" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export target="../build/level0.csv" format="csv"/>
+ </editorsettings>
  <tileset firstgid="1" source="tiles.tsx"/>
  <layer id="1" name="Tile Layer 1" width="24" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYBgF9AYsNDKXEQkPFUArN9MqjEFgsIUzMxKbWH8TUgeTZ8SBGQjIYwsfQmpHzae/+QC9sACA
+   eJxjYBgF9AYsNDKXEQkPFUArN9MqjEFgMIczLn8zE6kOXZ4RB2YgII8tfAipHTWf/uYDAL1EAIA=
   </data>
  </layer>
 </map>
