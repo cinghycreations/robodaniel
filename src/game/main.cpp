@@ -270,6 +270,7 @@ public:
 				position = cell.previousPosition;
 			}
 		}
+		reverseTrajectory.push_back( currentPosition );
 
 		vector<Vector2Int> trajectoryToDestination( reverseTrajectory.rbegin(), reverseTrajectory.rend() );
 		return trajectoryToDestination;
@@ -328,7 +329,7 @@ int main()
 
 	Pathfinder pathfinder( tiles, testbed );
 
-	float secondsPerStep = 0.2f;
+	float stepsPerSecond = 8;
 	vector<Vector2Int> currentPath;
 	float progress = 0;
 
@@ -356,6 +357,11 @@ int main()
 					}
 				}
 			}
+
+			if ( ImGui::CollapsingHeader( "Gameplay" ) )
+			{
+				ImGui::DragFloat( "Steps per Second", &stepsPerSecond, 0.01f );
+			}
 		}
 		ImGui::End();
 
@@ -370,6 +376,24 @@ int main()
 			const Vector2Int destination{ int( worldPosition.x ), int( worldPosition.y ) };
 			currentPath = pathfinder.goTo( currentPosition, destination );
 			progress = 0;
+		}
+
+		if ( !currentPath.empty() )
+		{
+			progress += stepsPerSecond * GetFrameTime();
+			if ( progress >= currentPath.size() - 1 )
+			{
+				heroPosition = Vector2IntToFloat( currentPath.back() );
+				currentPath.clear();
+				progress = 0;
+			} else
+			{
+				float fstep;
+				const float progressInStep = std::modf( progress, &fstep );
+				const int step = int( fstep );
+
+				heroPosition = Vector2Lerp( Vector2IntToFloat( currentPath.at( step ) ), Vector2IntToFloat( currentPath.at( step + 1 ) ), progressInStep );
+			}
 		}
 
 		BeginDrawing();
@@ -393,7 +417,6 @@ int main()
 
 			if ( !currentPath.empty() )
 			{
-				DrawLineV( Vector2{ float( heroPosition.x ) + 0.5f, float( heroPosition.y ) + 0.5f }, Vector2{ float( currentPath.front().x ) + 0.5f, float( currentPath.front().y ) + 0.5f }, BLUE );
 				for ( int i = 0; i < currentPath.size() - 1; ++i )
 				{
 					DrawLineV( Vector2{ float( currentPath.at( i ).x ) + 0.5f, float( currentPath.at( i ).y ) + 0.5f }, Vector2{ float( currentPath.at( i + 1 ).x ) + 0.5f, float( currentPath.at( i + 1 ).y ) + 0.5f }, BLUE );
