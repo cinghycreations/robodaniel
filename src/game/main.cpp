@@ -311,7 +311,7 @@ int main()
 	}
 
 	Tiles tiles( "tiles.png", 64 );
-	Map testbed( "level0.csv" );
+	Map testbed( "testbed.csv" );
 
 	Camera2D gameplayCamera;
 	memset( &gameplayCamera, 0, sizeof( Camera2D ) );
