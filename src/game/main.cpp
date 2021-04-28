@@ -150,17 +150,25 @@ class Pathfinder
 {
 private:
 
+	enum MoveFlags
+	{
+		MoveFlags_None = 0x0,
+		MoveFlags_NeedsSolidBottom = 0x1,
+	};
+
 	struct Move
 	{
 		string description;
+		unsigned int flags;
 		vector<Vector2Int> steps;
 	};
 
 	const vector<Move> moves
 	{
-		{ "Forward", { { 1, 0 } } },
-		{ "Long Jump", { { 1, -1 }, { 2, -1 }, { 3, 0 } } },
-		{ "High Jump", { { 0, -1 }, { 0, -2 }, { 0, -3 }, { 1, -3 } } },
+		{ "Forward", MoveFlags_NeedsSolidBottom, { { 1, 0 } } },
+		{ "Long Jump", MoveFlags_NeedsSolidBottom, { { 1, -1 }, { 2, -1 }, { 3, 0 } } },
+		{ "High Jump", MoveFlags_NeedsSolidBottom, { { 0, -1 }, { 0, -2 }, { 0, -3 }, { 1, -3 } } },
+		{ "Gravity", MoveFlags_None, { { 0, 1 } } },
 	};
 
 public:
@@ -195,6 +203,14 @@ public:
 			CellState& currentCell = cellAt( position );
 			for ( const Move& move : moves )
 			{
+				if ( move.flags & MoveFlags_NeedsSolidBottom )
+				{
+					if ( position.y + 1 >= map.getSize().y || map.getCellAt( Vector2Int{ position.x, position.y + 1 } ) != Tile_Ground )
+					{
+						continue;
+					}
+				}
+
 				vector<Vector2Int> trajectory;
 
 				for ( const Vector2Int& delta : move.steps )
