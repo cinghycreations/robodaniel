@@ -86,6 +86,11 @@ inline bool Vector2IntEqual( const Vector2Int& v1, const Vector2Int& v2 )
 	return v1.x == v2.x && v1.y == v2.y;
 }
 
+inline Vector2 Vector2IntToFloat( const Vector2Int& v )
+{
+	return Vector2{ float( v.x ), float( v.y ) };
+}
+
 inline Vector3Int Vector3IntZero()
 {
 	Vector3Int result = { 0, 0, 0 };
@@ -214,4 +219,9 @@ inline Vector3Int Vector3IntMax( const Vector3Int& v1, const Vector3Int& v2 )
 inline bool Vector3IntEqual( const Vector3Int& v1, const Vector3Int& v2 )
 {
 	return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z;
+}
+
+inline Vector3 Vector3IntToFloat( const Vector3Int& v )
+{
+	return Vector3{ float( v.x ), float( v.y ), float( v.z ) };
 }

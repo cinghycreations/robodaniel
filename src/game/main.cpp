@@ -186,7 +186,7 @@ public:
 
 		struct CellState
 		{
-			int shortestPath = -1;
+			float shortestPath = -1;
 			Vector2Int previousPosition;
 			vector<Vector2Int> trajectoryFromPreviousPosition;
 		};
@@ -231,12 +231,17 @@ public:
 					trajectory.push_back( stepPosition );
 				}
 
+				float currentPathLength = currentCell.shortestPath;
+				Vector2Int lastPosition = position;
 				for ( int step = 0; step < trajectory.size(); ++step )
 				{
+					currentPathLength += Vector2Distance( Vector2IntToFloat( lastPosition ), Vector2IntToFloat( trajectory.at( step ) ) );
+					lastPosition = trajectory.at( step );
+
 					CellState& cell = cellAt( trajectory.at( step ) );
-					if ( cell.shortestPath == -1 || currentCell.shortestPath + step + 1 < cell.shortestPath )
+					if ( cell.shortestPath < 0 || currentPathLength < cell.shortestPath )
 					{
-						cell.shortestPath = currentCell.shortestPath + step + 1;
+						cell.shortestPath = currentPathLength;
 						cell.previousPosition = position;
 						cell.trajectoryFromPreviousPosition = trajectory;
 
