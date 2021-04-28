@@ -177,18 +177,17 @@ private:
 public:
 	Pathfinder( const Tiles& _tiles, const Map& _map ) : tiles( _tiles ), map( _map ) { }
 
-	vector<Vector2Int> goTo( const Vector2Int& currentPosition, const Vector2Int& destination )
+	vector<Vector2> goTo( const Vector2Int& currentPosition, const Vector2Int& destination )
 	{
 		if ( Vector2IntEqual( currentPosition, destination ) )
 		{
-			return vector<Vector2Int>();
+			return vector<Vector2>();
 		}
 
 		struct CellState
 		{
 			float shortestPath = -1;
-			Vector2Int previousPosition;
-			vector<Vector2Int> trajectoryFromPreviousPosition;
+			vector<Vector2Int> trajectory;
 		};
 
 		vector<CellState> cellStates( map.getSize().x * map.getSize().y );
@@ -215,6 +214,7 @@ public:
 				}
 
 				vector<Vector2Int> trajectory;
+				trajectory.push_back( position );
 
 				for ( const Vector2Int& delta : move.steps )
 				{
@@ -232,18 +232,15 @@ public:
 				}
 
 				float currentPathLength = currentCell.shortestPath;
-				Vector2Int lastPosition = position;
-				for ( int step = 0; step < trajectory.size(); ++step )
+				for ( int step = 1; step < trajectory.size(); ++step )
 				{
-					currentPathLength += Vector2Distance( Vector2IntToFloat( lastPosition ), Vector2IntToFloat( trajectory.at( step ) ) );
-					lastPosition = trajectory.at( step );
+					currentPathLength += Vector2Distance( Vector2IntToFloat( trajectory.at( step - 1 ) ), Vector2IntToFloat( trajectory.at( step ) ) );
 
 					CellState& cell = cellAt( trajectory.at( step ) );
 					if ( cell.shortestPath < 0 || currentPathLength < cell.shortestPath )
 					{
 						cell.shortestPath = currentPathLength;
-						cell.previousPosition = position;
-						cell.trajectoryFromPreviousPosition = trajectory;
+						cell.trajectory = trajectory;
 
 						if ( step == trajectory.size() - 1 )
 						{
@@ -257,28 +254,72 @@ public:
 		const CellState& destinationCell = cellAt( destination );
 		if ( destinationCell.shortestPath == -1 )
 		{
-			return vector<Vector2Int>();
+			return vector<Vector2>();
 		}
 
-		vector<Vector2Int> reverseTrajectory;
+		vector<Vector2> reverseTrajectory;
 		{
 			Vector2Int position = destination;
 			while ( !Vector2IntEqual( position, currentPosition ) )
 			{
 				const CellState& cell = cellAt( position );
-				reverseTrajectory.insert( reverseTrajectory.end(), cell.trajectoryFromPreviousPosition.rbegin(), cell.trajectoryFromPreviousPosition.rend() );
-				position = cell.previousPosition;
+				const vector<Vector2> smoothTrajectory = catmullClark( cell.trajectory, 2 );
+				for ( int i = smoothTrajectory.size() - 1; i > 0; --i )
+				{
+					reverseTrajectory.push_back( smoothTrajectory.at( i ) );
+				}
+				position = cell.trajectory.front();
 			}
 		}
-		reverseTrajectory.push_back( currentPosition );
+		reverseTrajectory.push_back( Vector2IntToFloat( currentPosition ) );
 
-		vector<Vector2Int> trajectoryToDestination( reverseTrajectory.rbegin(), reverseTrajectory.rend() );
+		vector<Vector2> trajectoryToDestination( reverseTrajectory.rbegin(), reverseTrajectory.rend() );
 		return trajectoryToDestination;
 	}
 
 private:
 	const Tiles& tiles;
 	const Map& map;
+
+	vector<Vector2> catmullClark( const vector<Vector2Int> path, const int iterations )
+	{
+		vector<Vector2> points( path.size() );
+		std::transform( path.begin(), path.end(), points.begin(), []( const Vector2Int& v ) -> Vector2 { return Vector2IntToFloat( v ); } );
+
+		if ( points.size() < 3 )
+		{
+			return points;
+		}
+
+		int iterationsToDo = iterations;
+		while ( iterationsToDo-- )
+		{
+			vector<Vector2> midpoints;
+			midpoints.reserve( points.size() - 1 );
+			for ( int i = 0; i < points.size() - 1; ++i )
+			{
+				midpoints.push_back( Vector2Scale( Vector2Add( points.at( i ), points.at( i + 1 ) ), 0.5f ) );
+			}
+
+			vector<Vector2> subdivided;
+			subdivided.reserve( points.size() + midpoints.size() );
+			subdivided.push_back( points.front() );
+			for ( int i = 0; i < midpoints.size() - 1; ++i )
+			{
+				subdivided.push_back( midpoints.at( i ) );
+
+				const Vector2 newPoint{ points.at( i + 1 ).x * 0.5f + midpoints.at( i ).x * 0.25f + midpoints.at( i + 1 ).x * 0.25f,
+					points.at( i + 1 ).y * 0.5f + midpoints.at( i ).y * 0.25f + midpoints.at( i + 1 ).y * 0.25f };
+				subdivided.push_back( newPoint );
+			}
+			subdivided.push_back( midpoints.back() );
+			subdivided.push_back( points.back() );
+
+			points = std::move( subdivided );
+		}
+
+		return points;
+	}
 };
 
 int main()
@@ -330,7 +371,7 @@ int main()
 	Pathfinder pathfinder( tiles, testbed );
 
 	float stepsPerSecond = 8;
-	vector<Vector2Int> currentPath;
+	vector<Vector2> currentPath;
 	float progress = 0;
 
 	while ( !WindowShouldClose() )
@@ -383,7 +424,7 @@ int main()
 			progress += stepsPerSecond * GetFrameTime();
 			if ( progress >= currentPath.size() - 1 )
 			{
-				heroPosition = Vector2IntToFloat( currentPath.back() );
+				heroPosition = currentPath.back();
 				currentPath.clear();
 				progress = 0;
 			} else
@@ -392,7 +433,7 @@ int main()
 				const float progressInStep = std::modf( progress, &fstep );
 				const int step = int( fstep );
 
-				heroPosition = Vector2Lerp( Vector2IntToFloat( currentPath.at( step ) ), Vector2IntToFloat( currentPath.at( step + 1 ) ), progressInStep );
+				heroPosition = Vector2Lerp( currentPath.at( step ), currentPath.at( step + 1 ), progressInStep );
 			}
 		}
 
