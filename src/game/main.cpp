@@ -221,7 +221,7 @@ public:
 						cell.previousPosition = position;
 						cell.trajectoryFromPreviousPosition = trajectory;
 
-						if ( step == trajectory.size() - 1 )
+						if ( step == move.steps.size() - 1 )
 						{
 							positionsToVisit.push( trajectory.at( step ) );
 						}
