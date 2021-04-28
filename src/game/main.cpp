@@ -385,7 +385,7 @@ int main()
 
 			if ( !currentPath.empty() )
 			{
-				DrawLineV( heroPosition, Vector2{ float( currentPath.front().x ), float( currentPath.front().y ) }, BLUE );
+				DrawLineV( Vector2{ float( heroPosition.x ) + 0.5f, float( heroPosition.y ) + 0.5f }, Vector2{ float( currentPath.front().x ) + 0.5f, float( currentPath.front().y ) + 0.5f }, BLUE );
 				for ( int i = 0; i < currentPath.size() - 1; ++i )
 				{
 					DrawLineV( Vector2{ float( currentPath.at( i ).x ) + 0.5f, float( currentPath.at( i ).y ) + 0.5f }, Vector2{ float( currentPath.at( i + 1 ).x ) + 0.5f, float( currentPath.at( i + 1 ).y ) + 0.5f }, BLUE );
