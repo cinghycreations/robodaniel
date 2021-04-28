@@ -168,7 +168,7 @@ private:
 		{ "Right", MoveFlags_NeedsSolidBottom, { { 1, 0 } } },
 		{ "Right Long Jump", MoveFlags_NeedsSolidBottom, { { 1, -1 }, { 2, -1 }, { 3, 0 } } },
 		{ "Right High Jump", MoveFlags_NeedsSolidBottom, { { 0, -1 }, { 0, -2 }, { 0, -3 }, { 1, -3 } } },
-		{ "Left", MoveFlags_NeedsSolidBottom, { { 1, 0 } } },
+		{ "Left", MoveFlags_NeedsSolidBottom, { { -1, 0 } } },
 		{ "Left Long Jump", MoveFlags_NeedsSolidBottom, { { -1, -1 }, { -2, -1 }, { -3, 0 } } },
 		{ "Left High Jump", MoveFlags_NeedsSolidBottom, { { 0, -1 }, { 0, -2 }, { 0, -3 }, { -1, -3 } } },
 		{ "Gravity", MoveFlags_None, { { 0, 1 } } },
