@@ -146,6 +146,12 @@ private:
 	vector<int> cells;
 };
 
+struct PathPoint
+{
+	Vector2 coords;
+	float progress;
+};
+
 class Pathfinder
 {
 private:
@@ -177,11 +183,11 @@ private:
 public:
 	Pathfinder( const Tiles& _tiles, const Map& _map ) : tiles( _tiles ), map( _map ) { }
 
-	vector<Vector2> goTo( const Vector2Int& currentPosition, const Vector2Int& destination )
+	vector<PathPoint> goTo( const Vector2Int& currentPosition, const Vector2Int& destination )
 	{
 		if ( Vector2IntEqual( currentPosition, destination ) )
 		{
-			return vector<Vector2>();
+			return vector<PathPoint>();
 		}
 
 		struct CellState
@@ -254,37 +260,51 @@ public:
 		const CellState& destinationCell = cellAt( destination );
 		if ( destinationCell.shortestPath == -1 )
 		{
-			return vector<Vector2>();
+			return vector<PathPoint>();
 		}
 
-		vector<Vector2> reverseTrajectory;
+		vector<Vector2Int> pathPositions;
 		{
 			Vector2Int position = destination;
-			while ( !Vector2IntEqual( position, currentPosition ) )
+			while ( true )
 			{
-				const CellState& cell = cellAt( position );
-				const vector<Vector2> smoothTrajectory = catmullClark( cell.trajectory, 2 );
-				for ( int i = smoothTrajectory.size() - 1; i > 0; --i )
+				pathPositions.push_back( position );
+				if ( Vector2IntEqual( position, currentPosition ) )
 				{
-					reverseTrajectory.push_back( smoothTrajectory.at( i ) );
+					break;
 				}
-				position = cell.trajectory.front();
-			}
-		}
-		reverseTrajectory.push_back( Vector2IntToFloat( currentPosition ) );
 
-		vector<Vector2> trajectoryToDestination( reverseTrajectory.rbegin(), reverseTrajectory.rend() );
-		return trajectoryToDestination;
+				position = cellAt( position ).trajectory.front();
+			}
+
+			std::reverse( pathPositions.begin(), pathPositions.end() );
+		}
+
+		vector<PathPoint> trajectory;
+		trajectory.push_back( PathPoint{ Vector2IntToFloat( currentPosition ), 0 } );
+		float progressOffset = 0;
+		for ( int i = 1; i < pathPositions.size(); ++i )
+		{
+			const CellState& cell = cellAt( pathPositions.at( i ) );
+			vector<PathPoint> smoothPath = catmullClark( cell.trajectory, 2, progressOffset );
+			trajectory.insert( trajectory.end(), smoothPath.begin() + 1, smoothPath.end() );
+			progressOffset += cell.trajectory.size() - 1;
+		}
+
+		return trajectory;
 	}
 
 private:
 	const Tiles& tiles;
 	const Map& map;
 
-	vector<Vector2> catmullClark( const vector<Vector2Int> path, const int iterations )
+	vector<PathPoint> catmullClark( const vector<Vector2Int> path, const int iterations, const float progressOffset )
 	{
-		vector<Vector2> points( path.size() );
-		std::transform( path.begin(), path.end(), points.begin(), []( const Vector2Int& v ) -> Vector2 { return Vector2IntToFloat( v ); } );
+		vector<PathPoint> points;
+		for ( int i = 0; i < path.size(); ++i )
+		{
+			points.push_back( PathPoint{ Vector2IntToFloat( path.at( i ) ), progressOffset + i } );
+		}
 
 		if ( points.size() < 3 )
 		{
@@ -294,22 +314,27 @@ private:
 		int iterationsToDo = iterations;
 		while ( iterationsToDo-- )
 		{
-			vector<Vector2> midpoints;
+			vector<PathPoint> midpoints;
 			midpoints.reserve( points.size() - 1 );
 			for ( int i = 0; i < points.size() - 1; ++i )
 			{
-				midpoints.push_back( Vector2Scale( Vector2Add( points.at( i ), points.at( i + 1 ) ), 0.5f ) );
+				PathPoint midpoint;
+				midpoint.coords = Vector2Scale( Vector2Add( points.at( i ).coords, points.at( i + 1 ).coords ), 0.5f );
+				midpoint.progress = ( points.at( i ).progress + points.at( i + 1 ).progress ) / 2;
+				midpoints.push_back( midpoint );
 			}
 
-			vector<Vector2> subdivided;
+			vector<PathPoint> subdivided;
 			subdivided.reserve( points.size() + midpoints.size() );
 			subdivided.push_back( points.front() );
 			for ( int i = 0; i < midpoints.size() - 1; ++i )
 			{
 				subdivided.push_back( midpoints.at( i ) );
 
-				const Vector2 newPoint{ points.at( i + 1 ).x * 0.5f + midpoints.at( i ).x * 0.25f + midpoints.at( i + 1 ).x * 0.25f,
-					points.at( i + 1 ).y * 0.5f + midpoints.at( i ).y * 0.25f + midpoints.at( i + 1 ).y * 0.25f };
+				PathPoint newPoint;
+				newPoint.coords.x = points.at( i + 1 ).coords.x * 0.5f + midpoints.at( i ).coords.x * 0.25f + midpoints.at( i + 1 ).coords.x * 0.25f;
+				newPoint.coords.y = points.at( i + 1 ).coords.y * 0.5f + midpoints.at( i ).coords.y * 0.25f + midpoints.at( i + 1 ).coords.y * 0.25f;
+				newPoint.progress = points.at( i + 1 ).progress;
 				subdivided.push_back( newPoint );
 			}
 			subdivided.push_back( midpoints.back() );
@@ -371,7 +396,7 @@ int main()
 	Pathfinder pathfinder( tiles, testbed );
 
 	float stepsPerSecond = 8;
-	vector<Vector2> currentPath;
+	vector<PathPoint> currentPath;
 	float progress = 0;
 
 	while ( !WindowShouldClose() )
@@ -422,18 +447,21 @@ int main()
 		if ( !currentPath.empty() )
 		{
 			progress += stepsPerSecond * GetFrameTime();
-			if ( progress >= currentPath.size() - 1 )
+			if ( progress >= currentPath.back().progress )
 			{
-				heroPosition = currentPath.back();
+				heroPosition = currentPath.back().coords;
 				currentPath.clear();
 				progress = 0;
 			} else
 			{
-				float fstep;
-				const float progressInStep = std::modf( progress, &fstep );
-				const int step = int( fstep );
-
-				heroPosition = Vector2Lerp( currentPath.at( step ), currentPath.at( step + 1 ), progressInStep );
+				for ( int i = 0; i < currentPath.size() - 1; ++i )
+				{
+					if ( progress >= currentPath.at( i ).progress && progress < currentPath.at( i + 1 ).progress )
+					{
+						const float blend = ( progress - currentPath.at( i ).progress ) / ( currentPath.at( i + 1 ).progress - currentPath.at( i ).progress );
+						heroPosition = Vector2Lerp( currentPath.at( i ).coords, currentPath.at( i + 1 ).coords, blend );
+					}
+				}
 			}
 		}
 
@@ -460,7 +488,8 @@ int main()
 			{
 				for ( int i = 0; i < currentPath.size() - 1; ++i )
 				{
-					DrawLineV( Vector2{ float( currentPath.at( i ).x ) + 0.5f, float( currentPath.at( i ).y ) + 0.5f }, Vector2{ float( currentPath.at( i + 1 ).x ) + 0.5f, float( currentPath.at( i + 1 ).y ) + 0.5f }, BLUE );
+					DrawLineV( Vector2{ float( currentPath.at( i ).coords.x ) + 0.5f, float( currentPath.at( i ).coords.y ) + 0.5f },
+						Vector2{ float( currentPath.at( i + 1 ).coords.x ) + 0.5f, float( currentPath.at( i + 1 ).coords.y ) + 0.5f }, BLUE );
 				}
 			}
 
