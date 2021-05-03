@@ -396,6 +396,7 @@ int main()
 	Pathfinder pathfinder( tiles, testbed );
 
 	float stepsPerSecond = 8;
+	bool pathDebugDraw = false;
 	vector<PathPoint> currentPath;
 	float progress = 0;
 
@@ -427,6 +428,7 @@ int main()
 			if ( ImGui::CollapsingHeader( "Gameplay" ) )
 			{
 				ImGui::DragFloat( "Steps per Second", &stepsPerSecond, 0.01f );
+				ImGui::Checkbox( "Path Debug Draw", &pathDebugDraw );
 			}
 		}
 		ImGui::End();
@@ -484,7 +486,7 @@ int main()
 			}
 			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tile_Hero ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
 
-			if ( !currentPath.empty() )
+			if ( pathDebugDraw && !currentPath.empty() )
 			{
 				for ( int i = 0; i < currentPath.size() - 1; ++i )
 				{
