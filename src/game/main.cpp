@@ -528,9 +528,12 @@ public:
 	int totalCoins = 0;
 	int collectedCoins = 0;
 
-	bool finished = false;
+	bool completed = false;
+	bool failed = false;
 
 	vector<Enemy> enemies;
+
+	float totalTime = 0;
 
 	Session( const Tiles& _tiles, Level& _level, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), level( _level ), gameplayOptions( _gameplayOptions ), pathfinder( tiles, level )
 	{
@@ -547,6 +550,8 @@ public:
 
 	void step()
 	{
+		totalTime += GetFrameTime();
+
 		// Set camera
 		gameplayCamera.target = Vector2{ float( level.getSize().x ) / 2, float( level.getSize().y ) / 2 };
 		gameplayCamera.offset = Vector2{ float( GetScreenWidth() ) / 2, float( GetScreenHeight() ) / 2 };
@@ -602,7 +607,15 @@ public:
 
 			if ( level.getCellAt( touchedTile ) == Tiles::getOpenExit() && distance <= 0.1f )
 			{
-				finished = true;
+				completed = true;
+			}
+
+			for ( const Enemy& enemy : enemies )
+			{
+				if ( Vector2Distance( heroCenter, enemy.position ) <= gameplayOptions.enemyRadius )
+				{
+					failed = true;
+				}
 			}
 		}
 
@@ -778,8 +791,14 @@ int main()
 			if ( ImGui::CollapsingHeader( "Gameplay" ) )
 			{
 				ImGui::DragFloat( "Steps per Second", &gameplayOptions.heroStepsPerSecond, 0.01f );
-				ImGui::Checkbox( "Path Debug Draw", &pathDebugDraw );
 				ImGui::SliderFloat( "Coin Collision Radius", &gameplayOptions.coinRadius, 0, 0.5f );
+				ImGui::DragFloat( "Enemy Speed", &gameplayOptions.enemySpeed, 0.01f );
+				ImGui::SliderFloat( "Enemy Collision Radius", &gameplayOptions.enemyRadius, 0, 0.5f );
+			}
+
+			if ( ImGui::CollapsingHeader( "Debug Draw" ) )
+			{
+				ImGui::Checkbox( "Hero Path", &pathDebugDraw );
 			}
 		}
 		ImGui::End();
@@ -799,6 +818,7 @@ int main()
 			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
 			{
 				ImGui::Text( "Coins: %d / %d", session->collectedCoins, session->totalCoins );
+				ImGui::Text( "Time %.3f", session->totalTime );
 			}
 			ImGui::End();
 		}
@@ -827,7 +847,7 @@ int main()
 		}
 		EndDrawing();
 
-		if ( session->finished )
+		if ( session->completed )
 		{
 			session.reset();
 			level.reset();
@@ -838,6 +858,10 @@ int main()
 			{
 				nextLevel = 0;
 			}
+		} else if ( session->failed )
+		{
+			session.reset();
+			level.reset();
 		}
 	}
 
