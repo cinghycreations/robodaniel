@@ -6,6 +6,7 @@
 #include <raylib.h>
 #include <intmath.hpp>
 #include <queue>
+#include <filesystem>
 
 #define RAYMATH_IMPLEMENTATION
 #include <raymath.h>
@@ -97,7 +98,7 @@ private:
 class Map
 {
 public:
-	Map( const string& path )
+	Map( const filesystem::path& path )
 	{
 		ifstream stream( path );
 		int rows = 0;
@@ -390,6 +391,124 @@ struct GameplayOptions
 	float coinRadius = 0.4f;
 };
 
+class Session
+{
+public:
+	const Tiles& tiles;
+	Map& level;
+	const GameplayOptions& gameplayOptions;
+
+	Camera2D gameplayCamera;
+
+	Vector2Int heroTile;
+	Vector2 heroPosition;
+
+	Pathfinder pathfinder;
+	vector<PathPoint> currentPath;
+	float progress = 0;
+
+	int totalCoins = 0;
+	int collectedCoins = 0;
+
+	bool finished = false;
+
+	Session( const Tiles& _tiles, Map& _level, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), level( _level ), gameplayOptions( _gameplayOptions ), pathfinder( tiles, level )
+	{
+		memset( &gameplayCamera, 0, sizeof( Camera2D ) );
+
+		heroTile = level.findFirstCell( Tiles::getHero() );
+		level.setCellAt( heroTile, Tiles::getEmpty() );
+		heroPosition = Vector2IntToFloat( heroTile );
+
+		totalCoins = level.findAllCells( Tiles::getCoin() ).size();
+	}
+
+	void step()
+	{
+		// Set camera
+		gameplayCamera.target = Vector2{ float( level.getSize().x ) / 2, float( level.getSize().y ) / 2 };
+		gameplayCamera.offset = Vector2{ float( GetScreenWidth() ) / 2, float( GetScreenHeight() ) / 2 };
+		gameplayCamera.zoom = std::min<float>( float( GetScreenWidth() ) / level.getSize().x, float( GetScreenHeight() ) / level.getSize().y );
+
+		// Find new path
+		if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && !ImGui::GetIO().WantCaptureMouse )
+		{
+			const Vector2 worldPosition = GetScreenToWorld2D( GetMousePosition(), gameplayCamera );
+			const Vector2Int currentPosition{ int( heroPosition.x ), int( heroPosition.y ) };
+			const Vector2Int destination{ int( worldPosition.x ), int( worldPosition.y ) };
+			currentPath = pathfinder.goTo( currentPosition, destination );
+			progress = 0;
+		}
+
+		// Move hero
+		if ( !currentPath.empty() )
+		{
+			progress += gameplayOptions.heroStepsPerSecond * GetFrameTime();
+			if ( progress >= currentPath.back().progress )
+			{
+				heroPosition = currentPath.back().coords;
+				currentPath.clear();
+				progress = 0;
+			} else
+			{
+				for ( int i = 0; i < currentPath.size() - 1; ++i )
+				{
+					if ( progress >= currentPath.at( i ).progress && progress < currentPath.at( i + 1 ).progress )
+					{
+						const float blend = ( progress - currentPath.at( i ).progress ) / ( currentPath.at( i + 1 ).progress - currentPath.at( i ).progress );
+						heroPosition = Vector2Lerp( currentPath.at( i ).coords, currentPath.at( i + 1 ).coords, blend );
+					}
+				}
+			}
+		}
+
+		// Check collisions
+		{
+			const Vector2 heroCenter{ heroPosition.x + 0.5f, heroPosition.y + 0.5f };
+			const Vector2Int touchedTile{ int( heroCenter.x ), int( heroCenter.y ) };
+			const Vector2 touchedTileCenter{ float( touchedTile.x ) + 0.5f, float( touchedTile.y ) + 0.5f };
+			const float distance = Vector2Distance( heroCenter, touchedTileCenter );
+
+			if ( level.getCellAt( touchedTile ) == Tiles::getCoin() && distance <= gameplayOptions.coinRadius )
+			{
+				level.setCellAt( touchedTile, Tiles::getEmpty() );
+				++collectedCoins;
+			}
+
+			if ( level.getCellAt( touchedTile ) == Tiles::getOpenExit() && distance <= 0.1f )
+			{
+				finished = true;
+			}
+		}
+
+		// Open exit
+		if ( collectedCoins == totalCoins )
+		{
+			const Vector2Int doorPosition = level.findFirstCell( Tiles::getClosedExit() );
+			if ( doorPosition.x != -1 && doorPosition.y != -1 )
+			{
+				level.setCellAt( doorPosition, Tiles::getOpenExit() );
+			}
+		}
+	}
+
+	void render()
+	{
+		for ( int i = 0; i < level.getSize().y; ++i )
+		{
+			for ( int j = 0; j < level.getSize().x; ++j )
+			{
+				const int cell = level.getCellAt( Vector2Int{ j, i } );
+				if ( cell != Tiles::getEmpty() )
+				{
+					DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( cell ), Rectangle{ float( j ), float( i ), 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
+				}
+			}
+		}
+		DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getHero() ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
+	}
+};
+
 int main()
 {
 	InitWindow( 1280, 720, "Game" );
@@ -420,32 +539,19 @@ int main()
 		UnloadImage( image );
 	}
 
+	GameplayOptions gameplayOptions;
 	Tiles tiles( "tiles.png", 64 );
-	Map testbed( "testbed.csv" );
 
-	Camera2D gameplayCamera;
-	memset( &gameplayCamera, 0, sizeof( Camera2D ) );
+	unique_ptr<Map> map;
+	unique_ptr<Session> session;
+	int nextLevel = 0;
 
 	Camera2D debugCamera;
 	memset( &debugCamera, 0, sizeof( Camera2D ) );
 	debugCamera.zoom = 64.0f;
 
 	bool enableDebugCamera = false;
-
-	GameplayOptions gameplayOptions;
-
-	Vector2Int heroTile = testbed.findFirstCell( Tiles::getHero() );
-	testbed.setCellAt( heroTile, Tiles::getEmpty() );
-	Vector2 heroPosition{ heroTile.x, heroTile.y };
-
-	Pathfinder pathfinder( tiles, testbed );
-
 	bool pathDebugDraw = false;
-	vector<PathPoint> currentPath;
-	float progress = 0;
-
-	const int totalCoins = testbed.findAllCells( Tiles::getCoin() ).size();
-	int collectedCoins = 0;
 
 	while ( !WindowShouldClose() )
 	{
@@ -481,65 +587,21 @@ int main()
 		}
 		ImGui::End();
 
-		gameplayCamera.target = Vector2{ float( testbed.getSize().x ) / 2, float( testbed.getSize().y ) / 2 };
-		gameplayCamera.offset = Vector2{ float( GetScreenWidth() ) / 2, float( GetScreenHeight() ) / 2 };
-		gameplayCamera.zoom = std::min<float>( float( GetScreenWidth() ) / testbed.getSize().x, float( GetScreenHeight() ) / testbed.getSize().y );
-
-		if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && !ImGui::GetIO().WantCaptureMouse )
+		if ( !session )
 		{
-			const Vector2 worldPosition = GetScreenToWorld2D( GetMousePosition(), enableDebugCamera ? debugCamera : gameplayCamera );
-			const Vector2Int currentPosition{ int( heroPosition.x ), int( heroPosition.y ) };
-			const Vector2Int destination{ int( worldPosition.x ), int( worldPosition.y ) };
-			currentPath = pathfinder.goTo( currentPosition, destination );
-			progress = 0;
+			filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
+			map.reset( new Map( levelPath ) );
+			session.reset( new Session( tiles, *map, gameplayOptions ) );
 		}
 
-		if ( !currentPath.empty() )
-		{
-			progress += gameplayOptions.heroStepsPerSecond * GetFrameTime();
-			if ( progress >= currentPath.back().progress )
-			{
-				heroPosition = currentPath.back().coords;
-				currentPath.clear();
-				progress = 0;
-			} else
-			{
-				for ( int i = 0; i < currentPath.size() - 1; ++i )
-				{
-					if ( progress >= currentPath.at( i ).progress && progress < currentPath.at( i + 1 ).progress )
-					{
-						const float blend = ( progress - currentPath.at( i ).progress ) / ( currentPath.at( i + 1 ).progress - currentPath.at( i ).progress );
-						heroPosition = Vector2Lerp( currentPath.at( i ).coords, currentPath.at( i + 1 ).coords, blend );
-					}
-				}
-			}
-		}
-
-		// Check collisions
-		{
-			const Vector2 heroCenter{ heroPosition.x + 0.5f, heroPosition.y + 0.5f };
-			const Vector2Int touchedTile{ int( heroCenter.x ), int( heroCenter.y ) };
-			const Vector2 touchedTileCenter{ float( touchedTile.x ) + 0.5f, float( touchedTile.y ) + 0.5f };
-			const float distance = Vector2Distance( heroCenter, touchedTileCenter );
-
-			if ( testbed.getCellAt( touchedTile ) == Tiles::getCoin() && distance <= gameplayOptions.coinRadius )
-			{
-				testbed.setCellAt( touchedTile, Tiles::getEmpty() );
-				++collectedCoins;
-				if ( collectedCoins == totalCoins )
-				{
-					const Vector2Int doorPosition = testbed.findFirstCell( Tiles::getClosedExit() );
-					testbed.setCellAt( doorPosition, Tiles::getOpenExit() );
-				}
-			}
-		}
+		session->step();
 
 		// UI
 		{
 			ImGui::SetNextWindowPos( ImVec2( 10, 10 ) );
 			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
 			{
-				ImGui::Text( "Coins: %d / %d", collectedCoins, totalCoins );
+				ImGui::Text( "Coins: %d / %d", session->collectedCoins, session->totalCoins );
 			}
 			ImGui::End();
 		}
@@ -548,27 +610,16 @@ int main()
 		{
 			ClearBackground( RAYWHITE );
 
-			BeginMode2D( enableDebugCamera ? debugCamera : gameplayCamera );
+			BeginMode2D( session->gameplayCamera );
 
-			for ( int i = 0; i < testbed.getSize().y; ++i )
-			{
-				for ( int j = 0; j < testbed.getSize().x; ++j )
-				{
-					const int cell = testbed.getCellAt( Vector2Int{ j, i } );
-					if ( cell != Tiles::getEmpty() )
-					{
-						DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( cell ), Rectangle{ float( j ), float( i ), 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
-					}
-				}
-			}
-			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getHero() ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
+			session->render();
 
-			if ( pathDebugDraw && !currentPath.empty() )
+			if ( pathDebugDraw && !session->currentPath.empty() )
 			{
-				for ( int i = 0; i < currentPath.size() - 1; ++i )
+				for ( int i = 0; i < session->currentPath.size() - 1; ++i )
 				{
-					DrawLineV( Vector2{ float( currentPath.at( i ).coords.x ) + 0.5f, float( currentPath.at( i ).coords.y ) + 0.5f },
-						Vector2{ float( currentPath.at( i + 1 ).coords.x ) + 0.5f, float( currentPath.at( i + 1 ).coords.y ) + 0.5f }, BLUE );
+					DrawLineV( Vector2{ float( session->currentPath.at( i ).coords.x ) + 0.5f, float( session->currentPath.at( i ).coords.y ) + 0.5f },
+						Vector2{ float( session->currentPath.at( i + 1 ).coords.x ) + 0.5f, float( session->currentPath.at( i + 1 ).coords.y ) + 0.5f }, BLUE );
 				}
 			}
 
@@ -578,6 +629,19 @@ int main()
 			raylib_render_cimgui( ImGui::GetDrawData() );
 		}
 		EndDrawing();
+
+		if ( session->finished )
+		{
+			session.reset();
+			map.reset();
+
+			++nextLevel;
+			filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
+			if ( !filesystem::exists( levelPath ) )
+			{
+				nextLevel = 0;
+			}
+		}
 	}
 
 	return 0;
