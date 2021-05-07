@@ -85,9 +85,116 @@ public:
 		return 98;
 	}
 
-	static bool isEnemy( const int tile )
+	static int getEnemy()
 	{
-		return tile >= 128 && tile < 160;
+		return 128;
+	}
+
+	static bool isEnemyBlueprint( const int tile )
+	{
+		return tile >= 256 && tile <= 272;
+	}
+
+	static void getEnemyBlueprintProperties( const int tile, int& pathLength, bool& horizontal, bool& startsAtEnd )
+	{
+		switch ( tile )
+		{
+		case 257:
+			pathLength = 3;
+			horizontal = false;
+			startsAtEnd = false;
+			break;
+
+		case 258:
+			pathLength = 4;
+			horizontal = false;
+			startsAtEnd = false;
+			break;
+
+		case 259:
+			pathLength = 6;
+			horizontal = false;
+			startsAtEnd = false;
+			break;
+
+		case 260:
+			pathLength = 12;
+			horizontal = false;
+			startsAtEnd = false;
+			break;
+
+		case 261:
+			pathLength = 3;
+			horizontal = true;
+			startsAtEnd = false;
+			break;
+
+		case 262:
+			pathLength = 4;
+			horizontal = true;
+			startsAtEnd = false;
+			break;
+
+		case 263:
+			pathLength = 6;
+			horizontal = true;
+			startsAtEnd = false;
+			break;
+
+		case 264:
+			pathLength = 12;
+			horizontal = true;
+			startsAtEnd = false;
+			break;
+
+		case 265:
+			pathLength = 3;
+			horizontal = true;
+			startsAtEnd = true;
+			break;
+
+		case 266:
+			pathLength = 4;
+			horizontal = true;
+			startsAtEnd = true;
+			break;
+
+		case 267:
+			pathLength = 6;
+			horizontal = true;
+			startsAtEnd = true;
+			break;
+
+		case 268:
+			pathLength = 12;
+			horizontal = true;
+			startsAtEnd = true;
+			break;
+
+		case 269:
+			pathLength = 3;
+			horizontal = false;
+			startsAtEnd = true;
+			break;
+
+		case 270:
+			pathLength = 4;
+			horizontal = false;
+			startsAtEnd = true;
+			break;
+
+		case 271:
+			pathLength = 6;
+			horizontal = false;
+			startsAtEnd = true;
+			break;
+
+		case 272:
+			pathLength = 12;
+			horizontal = false;
+			startsAtEnd = true;
+			break;
+		}
 	}
 
 private:
@@ -389,11 +496,22 @@ struct GameplayOptions
 {
 	float heroStepsPerSecond = 16;
 	float coinRadius = 0.4f;
+	float enemySpeed = 4;
+	float enemyRadius = 0.5f;
 };
 
 class Session
 {
 public:
+
+	struct Enemy
+	{
+		Vector2Int startCell;
+		Vector2Int endCell;
+		float progress = 0;
+		Vector2 position;
+	};
+
 	const Tiles& tiles;
 	Level& level;
 	const GameplayOptions& gameplayOptions;
@@ -412,6 +530,8 @@ public:
 
 	bool finished = false;
 
+	vector<Enemy> enemies;
+
 	Session( const Tiles& _tiles, Level& _level, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), level( _level ), gameplayOptions( _gameplayOptions ), pathfinder( tiles, level )
 	{
 		memset( &gameplayCamera, 0, sizeof( Camera2D ) );
@@ -421,6 +541,8 @@ public:
 		heroPosition = Vector2IntToFloat( heroTile );
 
 		totalCoins = level.findAllCells( Tiles::getCoin() ).size();
+
+		createEnemies();
 	}
 
 	void step()
@@ -462,6 +584,9 @@ public:
 			}
 		}
 
+		// Move enemies
+		updateEnemies( GetFrameTime() );
+
 		// Check collisions
 		{
 			const Vector2 heroCenter{ heroPosition.x + 0.5f, heroPosition.y + 0.5f };
@@ -494,6 +619,7 @@ public:
 
 	void render()
 	{
+		// Draw world
 		for ( int i = 0; i < level.getSize().y; ++i )
 		{
 			for ( int j = 0; j < level.getSize().x; ++j )
@@ -505,7 +631,78 @@ public:
 				}
 			}
 		}
-		DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getHero() ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
+
+		// Draw hero
+		DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getHero() ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
+
+		// Draw enemies
+		for ( const Enemy& enemy : enemies )
+		{
+			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getEnemy() ), Rectangle{ enemy.position.x - 0.5f, enemy.position.y - 0.5f, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
+		}
+	}
+
+private:
+
+	void createEnemies()
+	{
+		for ( int i = 0; i < level.getSize().y; ++i )
+		{
+			for ( int j = 0; j < level.getSize().x; ++j )
+			{
+				const Vector2Int cellPosition{ j, i };
+				const int cell = level.getCellAt( cellPosition );
+				if ( Tiles::isEnemyBlueprint( cell ) )
+				{
+					int pathLength;
+					bool horizontal;
+					bool startsAtEnd;
+					Tiles::getEnemyBlueprintProperties( cell, pathLength, horizontal, startsAtEnd );
+
+					Enemy enemy;
+					enemy.startCell = cellPosition;
+					if ( horizontal )
+					{
+						enemy.endCell = Vector2Int{ cellPosition.x + pathLength - 1, cellPosition.y };
+					} else
+					{
+						enemy.endCell = Vector2Int{ cellPosition.x, cellPosition.y - ( pathLength - 1 ) };
+					}
+					if ( startsAtEnd )
+					{
+						std::swap( enemy.startCell, enemy.endCell );
+					}
+					enemy.progress = 0;
+
+					enemies.push_back( enemy );
+					level.setCellAt( cellPosition, Tiles::getEmpty() );
+				}
+			}
+		}
+
+		updateEnemies( 0 );
+	}
+
+	void updateEnemies( const float deltaTime )
+	{
+		for ( Enemy& enemy : enemies )
+		{
+			const Vector2 startPosition = Vector2Add( Vector2IntToFloat( enemy.startCell ), Vector2{ 0.5f, 0.5f } );
+			const Vector2 endPosition = Vector2Add( Vector2IntToFloat( enemy.endCell ), Vector2{ 0.5f, 0.5f } );
+			const float halfLength = Vector2Distance( startPosition, endPosition );
+			const float fullLength = halfLength * 2;
+
+			enemy.progress += gameplayOptions.enemySpeed * deltaTime;
+			enemy.progress = std::fmod( enemy.progress, fullLength );
+
+			if ( enemy.progress < halfLength )
+			{
+				enemy.position = Vector2Lerp( startPosition, endPosition, enemy.progress / halfLength );
+			} else
+			{
+				enemy.position = Vector2Lerp( endPosition, startPosition, ( enemy.progress - halfLength ) / halfLength );
+			}
+		}
 	}
 };
 

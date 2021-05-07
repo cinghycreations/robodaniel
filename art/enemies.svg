@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   viewBox="0 0 270.93333 270.93334"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="enemies.svg"
+   inkscape:export-filename="D:\Projects\experiments\robodaniel\build\tiles.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="304.90094"
+     inkscape:cy="498.28032"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid815"
+       spacingx="2.1166667"
+       spacingy="2.1166667"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="categories"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect896"
+       width="270.66992"
+       height="33.603241"
+       x="0.13171208"
+       y="0.13171312" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.37288907;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect898"
+       width="270.56046"
+       height="67.360443"
+       x="0.18644454"
+       y="34.053112" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect900"
+       width="270.66992"
+       height="33.603241"
+       x="0.13171208"
+       y="101.73171" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect902"
+       width="270.66992"
+       height="33.603245"
+       x="0.13171208"
+       y="135.59837" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="102.66908"
+       y="19.916273"
+       id="text906"><tspan
+         sodipodi:role="line"
+         id="tspan904"
+         x="102.66908"
+         y="19.916273"
+         style="font-size:12.69999981px;stroke-width:0.26458332">GROUND</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="111.2217"
+       y="53.515671"
+       id="text910"><tspan
+         sodipodi:role="line"
+         id="tspan908"
+         x="111.2217"
+         y="53.515671"
+         style="font-size:12.69999981px;stroke-width:0.26458332">HERO</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="109.12988"
+       y="122.05082"
+       id="text914"><tspan
+         sodipodi:role="line"
+         id="tspan912"
+         x="109.12988"
+         y="122.05082"
+         style="font-size:12.69999981px;stroke-width:0.26458332">ITEMS</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="102.44814"
+       y="156.98657"
+       id="text918"><tspan
+         sodipodi:role="line"
+         id="tspan916"
+         x="102.44814"
+         y="156.98657"
+         style="font-size:12.69999981px;stroke-width:0.26458332">ENEMIES</tspan></text>
+  </g>
+  <g
+     inkscape:label="objects"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-26.06665)"
+     style="display:inline">
+    <g
+       id="enemy_left_to_right_3"
+       transform="translate(-16.933335,-135.46667)"
+       inkscape:label="#g856">
+      <rect
+         ry="4.2333293"
+         y="165.76665"
+         x="21.166668"
+         height="8.4666586"
+         width="42.333332"
+         id="rect924"
+         style="fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3"
+         x="19.049999"
+         y="163.64998"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.59681e-06"
+         y="161.53331"
+         x="16.933332"
+         height="16.933332"
+         width="50.799999"
+         id="rect851"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_left_to_right_6"
+       transform="translate(-67.733334,-101.6)"
+       inkscape:label="#g863">
+      <rect
+         ry="3.8324256"
+         y="165.76665"
+         x="71.966667"
+         height="8.4666672"
+         width="93.133339"
+         id="rect924-4-97"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-1-1"
+         x="69.849998"
+         y="163.64998"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.5968181e-06"
+         y="161.53331"
+         x="67.73333"
+         height="16.933332"
+         width="101.6"
+         id="rect858"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_left_to_right_4"
+       transform="translate(-203.2,-135.46667)"
+       inkscape:label="#g870">
+      <rect
+         ry="4.1388359"
+         y="182.69998"
+         x="207.43333"
+         height="8.4666672"
+         width="59.266666"
+         id="rect924-4"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-1"
+         x="205.31667"
+         y="180.58331"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.5968181e-06"
+         y="178.46664"
+         x="203.2"
+         height="16.933332"
+         width="67.73333"
+         id="rect865"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_left_to_right_12"
+       transform="translate(-1.8764656e-7,-101.6)"
+       inkscape:label="#g877">
+      <rect
+         ry="3.5544198"
+         y="182.69998"
+         x="4.2333336"
+         height="8.4666662"
+         width="194.73334"
+         id="rect924-4-9"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-1-0"
+         x="2.1166666"
+         y="180.58331"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="3.5544124"
+         y="178.46664"
+         x="0"
+         height="16.933332"
+         width="203.2"
+         id="rect872"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       style="display:inline"
+       id="enemy_right_to_left_3"
+       transform="translate(-16.933335,-67.733334)"
+       inkscape:label="#g856-7">
+      <g
+         id="g942">
+        <rect
+           style="fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect924-1"
+           width="42.333332"
+           height="8.4666586"
+           x="21.166668"
+           y="165.76665"
+           ry="4.2333293" />
+        <image
+           style="display:inline"
+           sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+           y="163.64998"
+           x="52.916668"
+           id="image855-3-6"
+           xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+           preserveAspectRatio="none"
+           height="12.7"
+           width="12.7" />
+        <rect
+           style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect851-4"
+           width="50.799999"
+           height="16.933332"
+           x="16.933332"
+           y="161.53331"
+           ry="4.59681e-06" />
+      </g>
+    </g>
+    <g
+       style="display:inline"
+       id="enemy_right_to_left_6"
+       transform="translate(-67.733339,-33.866664)"
+       inkscape:label="#g863-4">
+      <g
+         id="g952">
+        <rect
+           style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect924-4-97-6"
+           width="93.133339"
+           height="8.4666672"
+           x="71.966667"
+           y="165.76665"
+           ry="3.8324256" />
+        <image
+           style="display:inline"
+           sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+           y="163.64998"
+           x="154.51668"
+           id="image855-3-1-1-1"
+           xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+           preserveAspectRatio="none"
+           height="12.7"
+           width="12.7" />
+        <rect
+           style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect858-9"
+           width="101.6"
+           height="16.933332"
+           x="67.73333"
+           y="161.53331"
+           ry="4.5968181e-06" />
+      </g>
+    </g>
+    <g
+       style="display:inline"
+       id="enemy_right_to_left_4"
+       transform="translate(-203.20001,-67.733334)"
+       inkscape:label="#g870-0">
+      <g
+         id="g947">
+        <rect
+           style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect924-4-7"
+           width="59.266666"
+           height="8.4666672"
+           x="207.43333"
+           y="182.69998"
+           ry="4.1388359" />
+        <image
+           style="display:inline"
+           sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+           y="180.58331"
+           x="256.11667"
+           id="image855-3-1-2"
+           xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+           preserveAspectRatio="none"
+           height="12.7"
+           width="12.7" />
+        <rect
+           style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect865-0"
+           width="67.73333"
+           height="16.933332"
+           x="203.2"
+           y="178.46664"
+           ry="4.5968181e-06" />
+      </g>
+    </g>
+    <g
+       style="display:inline"
+       id="enemy_right_to_left_12"
+       transform="translate(-4.3382325e-6,-33.866664)"
+       inkscape:label="#g877-3">
+      <g
+         id="g957">
+        <rect
+           style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect924-4-9-1"
+           width="194.73334"
+           height="8.4666662"
+           x="4.2333336"
+           y="182.69998"
+           ry="3.5544198" />
+        <image
+           style="display:inline"
+           sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+           y="180.58331"
+           x="188.38335"
+           id="image855-3-1-0-1"
+           xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+           preserveAspectRatio="none"
+           height="12.7"
+           width="12.7" />
+        <rect
+           style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect872-7"
+           width="203.2"
+           height="16.933332"
+           x="0"
+           y="178.46664"
+           ry="3.5544124" />
+      </g>
+    </g>
+    <g
+       id="enemy_top_to_bottom_3"
+       inkscape:label="#g1220">
+      <rect
+         transform="rotate(-90)"
+         ry="4.2333293"
+         y="4.2333331"
+         x="-208.09998"
+         height="8.4666586"
+         width="42.333332"
+         id="rect924-1-9"
+         style="fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2"
+         x="2.1166661"
+         y="163.64998"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.2333331"
+         y="161.53331"
+         x="-6.4941406e-07"
+         height="50.799999"
+         width="16.933332"
+         id="rect986"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_top_to_bottom_4"
+       inkscape:label="#g1227">
+      <rect
+         transform="rotate(-90)"
+         ry="4.1665125"
+         y="21.166666"
+         x="-225.03329"
+         height="8.4666595"
+         width="59.266651"
+         id="rect924-1-9-6"
+         style="fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2-9"
+         x="19.049999"
+         y="163.64998"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.1664996"
+         y="161.53331"
+         x="16.933332"
+         height="67.73333"
+         width="16.933332"
+         id="rect1222"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_top_to_bottom_6"
+       inkscape:label="#g1234">
+      <rect
+         transform="rotate(-90)"
+         ry="4.1665125"
+         y="38.100002"
+         x="-258.89999"
+         height="8.4666643"
+         width="93.133347"
+         id="rect924-1-9-6-3"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2-9-7"
+         x="35.983334"
+         y="163.64998"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.1664996"
+         y="161.53331"
+         x="33.866665"
+         height="101.6"
+         width="16.933332"
+         id="rect1229"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_top_to_bottom_12"
+       inkscape:label="#g1241">
+      <rect
+         transform="rotate(-90)"
+         ry="4.2333322"
+         y="55.033337"
+         x="-360.49997"
+         height="8.4666653"
+         width="194.73343"
+         id="rect924-1-9-6-9"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2-9-3"
+         x="52.916668"
+         y="163.64998"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.1664996"
+         y="161.53331"
+         x="50.799999"
+         height="203.2"
+         width="16.933332"
+         id="rect1236"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_bottom_to_top_3"
+       inkscape:label="#g1248">
+      <rect
+         transform="rotate(-90)"
+         ry="4.233325"
+         y="71.966667"
+         x="-208.09998"
+         height="8.46665"
+         width="42.333317"
+         id="rect924-1-9-6-1"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2-9-9"
+         x="69.850006"
+         y="197.51665"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.1664996"
+         y="161.53331"
+         x="67.73333"
+         height="50.799999"
+         width="16.933332"
+         id="rect1243"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_bottom_to_top_4"
+       inkscape:label="#g1255">
+      <rect
+         transform="rotate(-90)"
+         ry="4.1665125"
+         y="88.900002"
+         x="-225.03329"
+         height="8.4666595"
+         width="59.266651"
+         id="rect924-1-9-6-8"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2-9-9-3"
+         x="86.783333"
+         y="214.44998"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.1664996"
+         y="161.53331"
+         x="84.666664"
+         height="67.73333"
+         width="16.933332"
+         id="rect1250"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_bottom_to_top_6"
+       inkscape:label="#g1262">
+      <rect
+         transform="rotate(-90)"
+         ry="4.2333336"
+         y="105.83334"
+         x="-258.89999"
+         height="8.4666672"
+         width="93.133347"
+         id="rect924-1-9-6-8-5"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2-9-9-3-2"
+         x="103.71667"
+         y="248.31665"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.1664996"
+         y="161.53331"
+         x="101.6"
+         height="101.6"
+         width="16.933332"
+         id="rect1257"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="enemy_bottom_to_top_12"
+       inkscape:label="#g1269">
+      <rect
+         transform="rotate(-90)"
+         ry="4.2333326"
+         y="122.76667"
+         x="-360.49997"
+         height="8.4666681"
+         width="194.73296"
+         id="rect924-1-9-6-8-0"
+         style="display:inline;fill:#ff655b;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <image
+         width="12.7"
+         height="12.7"
+         preserveAspectRatio="none"
+         xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+         id="image855-3-6-2-9-9-3-2-4"
+         x="120.65"
+         y="349.91666"
+         sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+         style="display:inline" />
+      <rect
+         ry="4.1664996"
+         y="161.53331"
+         x="118.53333"
+         height="203.2"
+         width="16.933332"
+         id="rect1264"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>
