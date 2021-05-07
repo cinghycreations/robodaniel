@@ -95,10 +95,10 @@ private:
 	Vector2Int tilesPerSide;
 };
 
-class Map
+class Level
 {
 public:
-	Map( const filesystem::path& path )
+	Level( const filesystem::path& path )
 	{
 		ifstream stream( path );
 		int rows = 0;
@@ -219,7 +219,7 @@ private:
 	};
 
 public:
-	Pathfinder( const Tiles& _tiles, const Map& _map ) : tiles( _tiles ), map( _map ) { }
+	Pathfinder( const Tiles& _tiles, const Level& _level ) : tiles( _tiles ), level( _level ) { }
 
 	vector<PathPoint> goTo( const Vector2Int& currentPosition, const Vector2Int& destination )
 	{
@@ -234,8 +234,8 @@ public:
 			vector<Vector2Int> trajectory;
 		};
 
-		vector<CellState> cellStates( map.getSize().x * map.getSize().y );
-		auto cellAt = [ &cellStates, mapWidth = map.getSize().x ]( const Vector2Int& position )->CellState& { return cellStates.at( position.y * mapWidth + position.x ); };
+		vector<CellState> cellStates( level.getSize().x * level.getSize().y );
+		auto cellAt = [ &cellStates, mapWidth = level.getSize().x ]( const Vector2Int& position )->CellState& { return cellStates.at( position.y * mapWidth + position.x ); };
 
 		queue<Vector2Int> positionsToVisit;
 		cellAt( currentPosition ).shortestPath = 0;
@@ -251,7 +251,7 @@ public:
 			{
 				if ( move.flags & MoveFlags_NeedsSolidBottom )
 				{
-					if ( position.y + 1 >= map.getSize().y || !Tiles::isImpassable( map.getCellAt( Vector2Int{ position.x, position.y + 1 } ) ) )
+					if ( position.y + 1 >= level.getSize().y || !Tiles::isImpassable( level.getCellAt( Vector2Int{ position.x, position.y + 1 } ) ) )
 					{
 						continue;
 					}
@@ -263,11 +263,11 @@ public:
 				for ( const Vector2Int& delta : move.steps )
 				{
 					const Vector2Int stepPosition = Vector2IntAdd( position, delta );
-					if ( stepPosition.x < 0 || stepPosition.x >= map.getSize().x || stepPosition.y < 0 || stepPosition.y >= map.getSize().y )
+					if ( stepPosition.x < 0 || stepPosition.x >= level.getSize().x || stepPosition.y < 0 || stepPosition.y >= level.getSize().y )
 					{
 						break;
 					}
-					if ( Tiles::isImpassable( map.getCellAt( stepPosition ) ) )
+					if ( Tiles::isImpassable( level.getCellAt( stepPosition ) ) )
 					{
 						break;
 					}
@@ -334,7 +334,7 @@ public:
 
 private:
 	const Tiles& tiles;
-	const Map& map;
+	const Level& level;
 
 	vector<PathPoint> catmullClark( const vector<Vector2Int> path, const int iterations, const float progressOffset )
 	{
@@ -395,7 +395,7 @@ class Session
 {
 public:
 	const Tiles& tiles;
-	Map& level;
+	Level& level;
 	const GameplayOptions& gameplayOptions;
 
 	Camera2D gameplayCamera;
@@ -412,7 +412,7 @@ public:
 
 	bool finished = false;
 
-	Session( const Tiles& _tiles, Map& _level, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), level( _level ), gameplayOptions( _gameplayOptions ), pathfinder( tiles, level )
+	Session( const Tiles& _tiles, Level& _level, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), level( _level ), gameplayOptions( _gameplayOptions ), pathfinder( tiles, level )
 	{
 		memset( &gameplayCamera, 0, sizeof( Camera2D ) );
 
@@ -542,7 +542,7 @@ int main()
 	GameplayOptions gameplayOptions;
 	Tiles tiles( "tiles.png", 64 );
 
-	unique_ptr<Map> map;
+	unique_ptr<Level> level;
 	unique_ptr<Session> session;
 	int nextLevel = 0;
 
@@ -590,8 +590,8 @@ int main()
 		if ( !session )
 		{
 			filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
-			map.reset( new Map( levelPath ) );
-			session.reset( new Session( tiles, *map, gameplayOptions ) );
+			level.reset( new Level( levelPath ) );
+			session.reset( new Session( tiles, *level, gameplayOptions ) );
 		}
 
 		session->step();
@@ -633,7 +633,7 @@ int main()
 		if ( session->finished )
 		{
 			session.reset();
-			map.reset();
+			level.reset();
 
 			++nextLevel;
 			filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
