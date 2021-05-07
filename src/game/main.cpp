@@ -64,7 +64,7 @@ public:
 		return 32;
 	}
 
-	static int isCoin( const int tile )
+	static int getCoin()
 	{
 		return 96;
 	}
@@ -362,6 +362,12 @@ private:
 	}
 };
 
+struct GameplayOptions
+{
+	float heroStepsPerSecond = 16;
+	float coinRadius = 0.4f;
+};
+
 int main()
 {
 	InitWindow( 1280, 720, "Game" );
@@ -404,16 +410,20 @@ int main()
 
 	bool enableDebugCamera = false;
 
+	GameplayOptions gameplayOptions;
+
 	Vector2Int heroTile = testbed.findFirstCell( Tiles::getHero() );
 	testbed.setCellAt( heroTile, Tiles::getEmpty() );
 	Vector2 heroPosition{ heroTile.x, heroTile.y };
 
 	Pathfinder pathfinder( tiles, testbed );
 
-	float stepsPerSecond = 8;
 	bool pathDebugDraw = false;
 	vector<PathPoint> currentPath;
 	float progress = 0;
+
+	const int totalCoins = testbed.findAllCells( Tiles::getCoin() ).size();
+	int collectedCoins = 0;
 
 	while ( !WindowShouldClose() )
 	{
@@ -442,8 +452,9 @@ int main()
 
 			if ( ImGui::CollapsingHeader( "Gameplay" ) )
 			{
-				ImGui::DragFloat( "Steps per Second", &stepsPerSecond, 0.01f );
+				ImGui::DragFloat( "Steps per Second", &gameplayOptions.heroStepsPerSecond, 0.01f );
 				ImGui::Checkbox( "Path Debug Draw", &pathDebugDraw );
+				ImGui::SliderFloat( "Coin Collision Radius", &gameplayOptions.coinRadius, 0, 0.5f );
 			}
 		}
 		ImGui::End();
@@ -463,7 +474,7 @@ int main()
 
 		if ( !currentPath.empty() )
 		{
-			progress += stepsPerSecond * GetFrameTime();
+			progress += gameplayOptions.heroStepsPerSecond * GetFrameTime();
 			if ( progress >= currentPath.back().progress )
 			{
 				heroPosition = currentPath.back().coords;
@@ -480,6 +491,30 @@ int main()
 					}
 				}
 			}
+		}
+
+		// Check collisions
+		{
+			const Vector2 heroCenter{ heroPosition.x + 0.5f, heroPosition.y + 0.5f };
+			const Vector2Int touchedTile{ int( heroCenter.x ), int( heroCenter.y ) };
+			const Vector2 touchedTileCenter{ float( touchedTile.x ) + 0.5f, float( touchedTile.y ) + 0.5f };
+			const float distance = Vector2Distance( heroCenter, touchedTileCenter );
+
+			if ( testbed.getCellAt( touchedTile ) == Tiles::getCoin() && distance <= gameplayOptions.coinRadius )
+			{
+				testbed.setCellAt( touchedTile, Tiles::getEmpty() );
+				++collectedCoins;
+			}
+		}
+
+		// UI
+		{
+			ImGui::SetNextWindowPos( ImVec2( 10, 10 ) );
+			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
+			{
+				ImGui::Text( "Coins: %d / %d", collectedCoins, totalCoins );
+			}
+			ImGui::End();
 		}
 
 		BeginDrawing();
