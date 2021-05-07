@@ -62,7 +62,7 @@ public:
 
 	static bool isImpassable( const int tile )
 	{
-		return isGround( tile ) || tile == getClosedExit();
+		return isGround( tile );
 	}
 
 	static int getHero()
