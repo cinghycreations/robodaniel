@@ -506,6 +506,7 @@ struct Settings
 	struct
 	{
 		bool enableDebugCamera = false;
+		Camera2D debugCamera{ Vector2Zero(), Vector2Zero(), 0, 64 };
 		bool pathDebugDraw = false;
 	} debug;
 };
@@ -570,7 +571,7 @@ public:
 		// Find new path
 		if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && !ImGui::GetIO().WantCaptureMouse )
 		{
-			const Vector2 worldPosition = GetScreenToWorld2D( GetMousePosition(), gameplayCamera );
+			const Vector2 worldPosition = GetScreenToWorld2D( GetMousePosition(), settings.debug.enableDebugCamera ? settings.debug.debugCamera : gameplayCamera );
 			const Vector2Int currentPosition{ int( heroPosition.x ), int( heroPosition.y ) };
 			const Vector2Int destination{ int( worldPosition.x ), int( worldPosition.y ) };
 			currentPath = pathfinder.goTo( currentPosition, destination );
@@ -791,7 +792,7 @@ private:
 		}
 
 		// Render level
-		BeginMode2D( session->gameplayCamera );
+		BeginMode2D( settings.debug.enableDebugCamera ? settings.debug.debugCamera : session->gameplayCamera );
 		session->render();
 
 		if ( settings.debug.pathDebugDraw && !session->currentPath.empty() )
@@ -816,7 +817,7 @@ private:
 
 	void sessionCompleted()
 	{
-		BeginMode2D( session->gameplayCamera );
+		BeginMode2D( settings.debug.enableDebugCamera ? settings.debug.debugCamera : session->gameplayCamera );
 		session->render();
 		EndMode2D();
 
@@ -843,7 +844,7 @@ private:
 
 	void sessionFailed()
 	{
-		BeginMode2D( session->gameplayCamera );
+		BeginMode2D( settings.debug.enableDebugCamera ? settings.debug.debugCamera : session->gameplayCamera );
 		session->render();
 		EndMode2D();
 
@@ -896,10 +897,6 @@ int main()
 	Settings settings;
 	GameFlow flow( tiles, settings );
 
-	Camera2D debugCamera;
-	memset( &debugCamera, 0, sizeof( Camera2D ) );
-	debugCamera.zoom = 64.0f;
-
 	while ( !WindowShouldClose() )
 	{
 		ImGui_ImplRaylib_NewFrame();
@@ -921,14 +918,14 @@ int main()
 				ImGui::Checkbox( "Enable Debug Camera", &settings.debug.enableDebugCamera );
 				if ( settings.debug.enableDebugCamera )
 				{
-					ImGui::DragFloat2( "Offset", &debugCamera.offset.x );
-					ImGui::DragFloat2( "Target", &debugCamera.target.x, 0.1f );
-					ImGui::DragFloat( "Rotation", &debugCamera.rotation );
-					ImGui::DragFloat( "Zoom", &debugCamera.zoom );
+					ImGui::DragFloat2( "Offset", &settings.debug.debugCamera.offset.x );
+					ImGui::DragFloat2( "Target", &settings.debug.debugCamera.target.x, 0.1f );
+					ImGui::DragFloat( "Rotation", &settings.debug.debugCamera.rotation );
+					ImGui::DragFloat( "Zoom", &settings.debug.debugCamera.zoom );
 					if ( ImGui::Button( "Reset" ) )
 					{
-						memset( &debugCamera, 0, sizeof( Camera2D ) );
-						debugCamera.zoom = 64;
+						memset( &settings.debug.debugCamera, 0, sizeof( Camera2D ) );
+						settings.debug.debugCamera.zoom = 64;
 					}
 				}
 				ImGui::Checkbox( "Hero Path", &settings.debug.pathDebugDraw );
