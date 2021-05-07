@@ -760,6 +760,7 @@ private:
 			ImGui::Text( "Press start to begin" );
 			if ( ImGui::Button( "Start" ) )
 			{
+				nextLevel = 0;
 				currentHandler = &GameFlow::initSession;
 			}
 		}
@@ -823,7 +824,7 @@ private:
 
 		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration ) )
 		{
-			ImGui::Text( "Level successful! Press continue" );
+			ImGui::Text( "Level completed in %.3f seconds! Press continue", session->totalTime );
 			if ( ImGui::Button( "Continue" ) )
 			{
 				session.reset();
@@ -834,9 +835,11 @@ private:
 				if ( !filesystem::exists( levelPath ) )
 				{
 					nextLevel = 0;
+					currentHandler = &GameFlow::splashScreen;
+				} else
+				{
+					currentHandler = &GameFlow::initSession;
 				}
-
-				currentHandler = &GameFlow::initSession;
 			}
 		}
 		ImGui::End();
