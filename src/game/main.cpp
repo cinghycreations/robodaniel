@@ -7,6 +7,7 @@
 #include <intmath.hpp>
 #include <queue>
 #include <filesystem>
+#include <functional>
 
 #define RAYMATH_IMPLEMENTATION
 #include <raymath.h>
@@ -719,6 +720,139 @@ private:
 	}
 };
 
+class GameFlow
+{
+public:
+	const Tiles& tiles;
+	const GameplayOptions& gameplayOptions;
+
+	GameFlow( const Tiles& _tiles, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), gameplayOptions( _gameplayOptions )
+	{
+		currentHandler = &GameFlow::splashScreen;
+	}
+
+	void step()
+	{
+		currentHandler( this );
+	}
+
+private:
+	function<void( GameFlow* )> currentHandler;
+
+	unique_ptr<Level> level;
+	unique_ptr<Session> session;
+	int nextLevel = 0;
+
+	void splashScreen()
+	{
+		if ( ImGui::Begin( "Splash Screen", false, ImGuiWindowFlags_NoDecoration ) )
+		{
+			ImGui::Text( "Press start to begin" );
+			if ( ImGui::Button( "Start" ) )
+			{
+				currentHandler = &GameFlow::initSession;
+			}
+		}
+		ImGui::End();
+	}
+
+	void initSession()
+	{
+		filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
+		level.reset( new Level( levelPath ) );
+		session.reset( new Session( tiles, *level, gameplayOptions ) );
+
+		currentHandler = &GameFlow::play;
+	}
+
+	void play()
+	{
+		// Step session
+		session->step();
+
+		// Render UI
+		{
+			ImGui::SetNextWindowPos( ImVec2( 10, 10 ) );
+			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
+			{
+				ImGui::Text( "Coins: %d / %d", session->collectedCoins, session->totalCoins );
+				ImGui::Text( "Time %.3f", session->totalTime );
+			}
+			ImGui::End();
+		}
+
+		// Render level
+		BeginMode2D( session->gameplayCamera );
+		session->render();
+
+		//if ( pathDebugDraw && !session->currentPath.empty() )
+		//{
+		//	for ( int i = 0; i < session->currentPath.size() - 1; ++i )
+		//	{
+		//		DrawLineV( Vector2{ float( session->currentPath.at( i ).coords.x ) + 0.5f, float( session->currentPath.at( i ).coords.y ) + 0.5f },
+		//			Vector2{ float( session->currentPath.at( i + 1 ).coords.x ) + 0.5f, float( session->currentPath.at( i + 1 ).coords.y ) + 0.5f }, BLUE );
+		//	}
+		//}
+
+		EndMode2D();
+
+		if ( session->completed )
+		{
+			currentHandler = &GameFlow::sessionCompleted;
+		} else if ( session->failed )
+		{
+			currentHandler = &GameFlow::sessionFailed;
+		}
+	}
+
+	void sessionCompleted()
+	{
+		BeginMode2D( session->gameplayCamera );
+		session->render();
+		EndMode2D();
+
+		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration ) )
+		{
+			ImGui::Text( "Level successful! Press continue" );
+			if ( ImGui::Button( "Continue" ) )
+			{
+				session.reset();
+				level.reset();
+
+				++nextLevel;
+				filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
+				if ( !filesystem::exists( levelPath ) )
+				{
+					nextLevel = 0;
+				}
+
+				currentHandler = &GameFlow::initSession;
+			}
+		}
+		ImGui::End();
+	}
+
+	void sessionFailed()
+	{
+		BeginMode2D( session->gameplayCamera );
+		session->render();
+		EndMode2D();
+
+		if ( ImGui::Begin( "Session failed", false, ImGuiWindowFlags_NoDecoration ) )
+		{
+			ImGui::Text( "Level failed! Press retry" );
+			if ( ImGui::Button( "Retry" ) )
+			{
+				session.reset();
+				level.reset();
+
+				currentHandler = &GameFlow::initSession;
+			}
+		}
+		ImGui::End();
+	}
+};
+
 int main()
 {
 	InitWindow( 1280, 720, "Game" );
@@ -749,12 +883,9 @@ int main()
 		UnloadImage( image );
 	}
 
-	GameplayOptions gameplayOptions;
 	Tiles tiles( "tiles.png", 64 );
-
-	unique_ptr<Level> level;
-	unique_ptr<Session> session;
-	int nextLevel = 0;
+	GameplayOptions gameplayOptions;
+	GameFlow flow( tiles, gameplayOptions );
 
 	Camera2D debugCamera;
 	memset( &debugCamera, 0, sizeof( Camera2D ) );
@@ -769,100 +900,45 @@ int main()
 		ImGui_ImplRaylib_ProcessEvent();
 		ImGui::NewFrame();
 
-		if ( ImGui::Begin( "Game" ) )
+		if ( ImGui::CollapsingHeader( "Camera" ) )
 		{
-			if ( ImGui::CollapsingHeader( "Camera" ) )
+			ImGui::Checkbox( "Enable Debug Camera", &enableDebugCamera );
+			if ( enableDebugCamera )
 			{
-				ImGui::Checkbox( "Enable Debug Camera", &enableDebugCamera );
-				if ( enableDebugCamera )
+				ImGui::DragFloat2( "Offset", &debugCamera.offset.x );
+				ImGui::DragFloat2( "Target", &debugCamera.target.x, 0.1f );
+				ImGui::DragFloat( "Rotation", &debugCamera.rotation );
+				ImGui::DragFloat( "Zoom", &debugCamera.zoom );
+				if ( ImGui::Button( "Reset" ) )
 				{
-					ImGui::DragFloat2( "Offset", &debugCamera.offset.x );
-					ImGui::DragFloat2( "Target", &debugCamera.target.x, 0.1f );
-					ImGui::DragFloat( "Rotation", &debugCamera.rotation );
-					ImGui::DragFloat( "Zoom", &debugCamera.zoom );
-					if ( ImGui::Button( "Reset" ) )
-					{
-						memset( &debugCamera, 0, sizeof( Camera2D ) );
-						debugCamera.zoom = 64;
-					}
+					memset( &debugCamera, 0, sizeof( Camera2D ) );
+					debugCamera.zoom = 64;
 				}
 			}
-
-			if ( ImGui::CollapsingHeader( "Gameplay" ) )
-			{
-				ImGui::DragFloat( "Steps per Second", &gameplayOptions.heroStepsPerSecond, 0.01f );
-				ImGui::SliderFloat( "Coin Collision Radius", &gameplayOptions.coinRadius, 0, 0.5f );
-				ImGui::DragFloat( "Enemy Speed", &gameplayOptions.enemySpeed, 0.01f );
-				ImGui::SliderFloat( "Enemy Collision Radius", &gameplayOptions.enemyRadius, 0, 0.5f );
-			}
-
-			if ( ImGui::CollapsingHeader( "Debug Draw" ) )
-			{
-				ImGui::Checkbox( "Hero Path", &pathDebugDraw );
-			}
-		}
-		ImGui::End();
-
-		if ( !session )
-		{
-			filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
-			level.reset( new Level( levelPath ) );
-			session.reset( new Session( tiles, *level, gameplayOptions ) );
 		}
 
-		session->step();
-
-		// UI
+		if ( ImGui::CollapsingHeader( "Gameplay" ) )
 		{
-			ImGui::SetNextWindowPos( ImVec2( 10, 10 ) );
-			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
-			{
-				ImGui::Text( "Coins: %d / %d", session->collectedCoins, session->totalCoins );
-				ImGui::Text( "Time %.3f", session->totalTime );
-			}
-			ImGui::End();
+			ImGui::DragFloat( "Steps per Second", &gameplayOptions.heroStepsPerSecond, 0.01f );
+			ImGui::SliderFloat( "Coin Collision Radius", &gameplayOptions.coinRadius, 0, 0.5f );
+			ImGui::DragFloat( "Enemy Speed", &gameplayOptions.enemySpeed, 0.01f );
+			ImGui::SliderFloat( "Enemy Collision Radius", &gameplayOptions.enemyRadius, 0, 0.5f );
+		}
+
+		if ( ImGui::CollapsingHeader( "Debug Draw" ) )
+		{
+			ImGui::Checkbox( "Hero Path", &pathDebugDraw );
 		}
 
 		BeginDrawing();
 		{
 			ClearBackground( RAYWHITE );
-
-			BeginMode2D( session->gameplayCamera );
-
-			session->render();
-
-			if ( pathDebugDraw && !session->currentPath.empty() )
-			{
-				for ( int i = 0; i < session->currentPath.size() - 1; ++i )
-				{
-					DrawLineV( Vector2{ float( session->currentPath.at( i ).coords.x ) + 0.5f, float( session->currentPath.at( i ).coords.y ) + 0.5f },
-						Vector2{ float( session->currentPath.at( i + 1 ).coords.x ) + 0.5f, float( session->currentPath.at( i + 1 ).coords.y ) + 0.5f }, BLUE );
-				}
-			}
-
-			EndMode2D();
+			flow.step();
 
 			ImGui::Render();
 			raylib_render_cimgui( ImGui::GetDrawData() );
 		}
 		EndDrawing();
-
-		if ( session->completed )
-		{
-			session.reset();
-			level.reset();
-
-			++nextLevel;
-			filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
-			if ( !filesystem::exists( levelPath ) )
-			{
-				nextLevel = 0;
-			}
-		} else if ( session->failed )
-		{
-			session.reset();
-			level.reset();
-		}
 	}
 
 	return 0;
