@@ -17,16 +17,6 @@
 
 using namespace std;
 
-enum
-{
-	Tile_Empty = -1,
-	Tile_Ground,
-	Tile_Sky,
-	Tile_Hero,
-	Tile_Coin,
-	Tile_Enemy,
-};
-
 class Tiles
 {
 public:
@@ -57,6 +47,31 @@ public:
 		rectangle.width = tileSize;
 		rectangle.height = tileSize;
 		return rectangle;
+	}
+
+	static int getEmpty()
+	{
+		return -1;
+	}
+
+	static int isGround( const int tile )
+	{
+		return tile >= 0 && tile < 32;
+	}
+
+	static int getHero()
+	{
+		return 32;
+	}
+
+	static int isCoin( const int tile )
+	{
+		return 96;
+	}
+
+	static int isEnemy( const int tile )
+	{
+		return tile >= 128 && tile < 160;
 	}
 
 private:
@@ -213,7 +228,7 @@ public:
 			{
 				if ( move.flags & MoveFlags_NeedsSolidBottom )
 				{
-					if ( position.y + 1 >= map.getSize().y || map.getCellAt( Vector2Int{ position.x, position.y + 1 } ) != Tile_Ground )
+					if ( position.y + 1 >= map.getSize().y || !Tiles::isGround( map.getCellAt( Vector2Int{ position.x, position.y + 1 } ) ) )
 					{
 						continue;
 					}
@@ -229,7 +244,7 @@ public:
 					{
 						break;
 					}
-					if ( map.getCellAt( stepPosition ) == Tile_Ground )
+					if ( Tiles::isGround( map.getCellAt( stepPosition ) ) )
 					{
 						break;
 					}
@@ -389,8 +404,8 @@ int main()
 
 	bool enableDebugCamera = false;
 
-	Vector2Int heroTile = testbed.findFirstCell( Tile_Hero );
-	testbed.setCellAt( heroTile, Tile_Empty );
+	Vector2Int heroTile = testbed.findFirstCell( Tiles::getHero() );
+	testbed.setCellAt( heroTile, Tiles::getEmpty() );
 	Vector2 heroPosition{ heroTile.x, heroTile.y };
 
 	Pathfinder pathfinder( tiles, testbed );
@@ -478,13 +493,13 @@ int main()
 				for ( int j = 0; j < testbed.getSize().x; ++j )
 				{
 					const int cell = testbed.getCellAt( Vector2Int{ j, i } );
-					if ( cell != Tile_Empty )
+					if ( cell != Tiles::getEmpty() )
 					{
 						DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( cell ), Rectangle{ float( j ), float( i ), 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
 					}
 				}
 			}
-			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tile_Hero ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
+			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getHero() ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
 
 			if ( pathDebugDraw && !currentPath.empty() )
 			{

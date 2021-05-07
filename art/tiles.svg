@@ -7,6 +7,7 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="1024"
@@ -28,11 +29,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="532.1796"
-     inkscape:cy="715.73724"
+     inkscape:zoom="1.4"
+     inkscape:cx="413.26461"
+     inkscape:cy="944.6752"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
@@ -55,113 +56,146 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="categories"
+     style="display:inline">
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect896"
+       width="270.66992"
+       height="33.603241"
+       x="0.13171208"
+       y="0.13171312" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.37288907;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect898"
+       width="270.56046"
+       height="67.360443"
+       x="0.18644454"
+       y="34.053112" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect900"
+       width="270.66992"
+       height="33.603241"
+       x="0.13171208"
+       y="101.73171" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect902"
+       width="270.66992"
+       height="33.603245"
+       x="0.13171208"
+       y="135.59837" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="102.66908"
+       y="19.916273"
+       id="text906"><tspan
+         sodipodi:role="line"
+         id="tspan904"
+         x="102.66908"
+         y="19.916273"
+         style="font-size:12.69999981px;stroke-width:0.26458332">GROUND</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="111.2217"
+       y="53.515671"
+       id="text910"><tspan
+         sodipodi:role="line"
+         id="tspan908"
+         x="111.2217"
+         y="53.515671"
+         style="font-size:12.69999981px;stroke-width:0.26458332">HERO</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="109.12988"
+       y="122.05082"
+       id="text914"><tspan
+         sodipodi:role="line"
+         id="tspan912"
+         x="109.12988"
+         y="122.05082"
+         style="font-size:12.69999981px;stroke-width:0.26458332">ITEMS</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:12.69999981px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="102.44814"
+       y="156.98657"
+       id="text918"><tspan
+         sodipodi:role="line"
+         id="tspan916"
+         x="102.44814"
+         y="156.98657"
+         style="font-size:12.69999981px;stroke-width:0.26458332">ENEMIES</tspan></text>
+  </g>
+  <g
+     inkscape:label="objects"
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-26.06665)">
-    <rect
-       style="fill:#c18845;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4520"
-       width="16.933332"
-       height="16.933332"
-       x="0"
-       y="26.066647" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#7a4408;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="0.83154738"
-       y="35.856232"
-       id="text4524"><tspan
-         sodipodi:role="line"
-         id="tspan4522"
-         x="0.83154738"
-         y="35.856232"
-         style="fill:#7a4408;fill-opacity:1;stroke-width:0.26458332">Ground</tspan></text>
-    <rect
-       style="fill:#43d0cd;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4526"
-       width="16.933332"
-       height="16.933332"
-       x="16.933332"
-       y="26.066647" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#136c63;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
-       x="21.07601"
-       y="35.869663"
-       id="text4530"><tspan
-         sodipodi:role="line"
-         id="tspan4528"
-         x="21.07601"
-         y="35.869663"
-         style="stroke-width:0.26458332;fill:#136c63;fill-opacity:1;">Sky</tspan></text>
     <rect
        style="fill:#312dd7;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4532"
        width="8.4666662"
        height="16.933332"
-       x="38.099998"
-       y="26.066647" />
+       x="4.2333331"
+       y="59.933315" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="37.966362"
-       y="35.712185"
+       x="4.0996966"
+       y="69.578857"
        id="text4536"><tspan
          sodipodi:role="line"
          id="tspan4534"
-         x="37.966362"
-         y="35.712185"
+         x="4.0996966"
+         y="69.578857"
          style="font-size:3.52777767px;stroke-width:0.26458332">Hero</tspan></text>
-    <circle
-       style="fill:#d7d433;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path4538"
-       cx="59.266666"
-       cy="34.533314"
-       r="4.2333331" />
-    <path
-       sodipodi:type="star"
-       style="fill:#d7333a;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path4540"
-       sodipodi:sides="5"
-       sodipodi:cx="76.199997"
-       sodipodi:cy="34.533314"
-       sodipodi:r1="5.9868374"
-       sodipodi:r2="4.8434534"
-       sodipodi:arg1="-0.78539816"
-       sodipodi:arg2="-0.15707963"
-       inkscape:flatsided="true"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="m 80.43333,30.29998 1.100978,6.951301 -6.270859,3.195162 -4.976582,-4.976582 3.195163,-6.270858 z"
-       inkscape:transform-center-x="0.28941013"
-       inkscape:transform-center-y="0.28940906" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="55.501053"
-       y="35.535576"
-       id="text4544"><tspan
-         sodipodi:role="line"
-         id="tspan4542"
-         x="55.501053"
-         y="35.535576"
-         style="font-size:3.17499995px;fill:#8c8446;fill-opacity:1;stroke-width:0.26458332">Coin</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="71.164856"
-       y="35.468758"
-       id="text4548"><tspan
-         sodipodi:role="line"
-         id="tspan4546"
-         x="71.164856"
-         y="35.468758"
-         style="font-size:2.82222223px;fill:#7c2b2b;fill-opacity:1;stroke-width:0.26458332">Enemy</tspan></text>
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\HUD\hud_coins.png"
+       y="131.89998"
+       x="4.365624"
+       id="image844"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/HUD/hud_coins.png"
+       preserveAspectRatio="none"
+       height="8.4666681"
+       width="8.4666681" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Enemies\blockerMad.png"
+       y="163.59328"
+       x="2.3056552"
+       id="image855"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Enemies/blockerMad.png"
+       preserveAspectRatio="none"
+       height="12.7"
+       width="12.7" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Tiles\grassCenter.png"
+       y="26.066647"
+       x="0"
+       id="image877"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Tiles/grassCenter.png"
+       preserveAspectRatio="none"
+       height="16.933332"
+       width="16.933334" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Tiles\grassMid.png"
+       y="26.066647"
+       x="16.933334"
+       id="image888"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Tiles/grassMid.png"
+       preserveAspectRatio="none"
+       height="16.933334"
+       width="16.933332" />
   </g>
 </svg>
