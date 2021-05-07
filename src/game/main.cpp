@@ -493,12 +493,21 @@ private:
 	}
 };
 
-struct GameplayOptions
+struct Settings
 {
-	float heroStepsPerSecond = 16;
-	float coinRadius = 0.4f;
-	float enemySpeed = 4;
-	float enemyRadius = 0.5f;
+	struct
+	{
+		float heroStepsPerSecond = 16;
+		float coinRadius = 0.4f;
+		float enemySpeed = 4;
+		float enemyRadius = 0.5f;
+	} gameplay;
+
+	struct
+	{
+		bool enableDebugCamera = false;
+		bool pathDebugDraw = false;
+	} debug;
 };
 
 class Session
@@ -515,7 +524,7 @@ public:
 
 	const Tiles& tiles;
 	Level& level;
-	const GameplayOptions& gameplayOptions;
+	const Settings& settings;
 
 	Camera2D gameplayCamera;
 
@@ -536,7 +545,7 @@ public:
 
 	float totalTime = 0;
 
-	Session( const Tiles& _tiles, Level& _level, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), level( _level ), gameplayOptions( _gameplayOptions ), pathfinder( tiles, level )
+	Session( const Tiles& _tiles, Level& _level, const Settings& _settings ) : tiles( _tiles ), level( _level ), settings( _settings ), pathfinder( tiles, level )
 	{
 		memset( &gameplayCamera, 0, sizeof( Camera2D ) );
 
@@ -571,7 +580,7 @@ public:
 		// Move hero
 		if ( !currentPath.empty() )
 		{
-			progress += gameplayOptions.heroStepsPerSecond * GetFrameTime();
+			progress += settings.gameplay.heroStepsPerSecond * GetFrameTime();
 			if ( progress >= currentPath.back().progress )
 			{
 				heroPosition = currentPath.back().coords;
@@ -600,7 +609,7 @@ public:
 			const Vector2 touchedTileCenter{ float( touchedTile.x ) + 0.5f, float( touchedTile.y ) + 0.5f };
 			const float distance = Vector2Distance( heroCenter, touchedTileCenter );
 
-			if ( level.getCellAt( touchedTile ) == Tiles::getCoin() && distance <= gameplayOptions.coinRadius )
+			if ( level.getCellAt( touchedTile ) == Tiles::getCoin() && distance <= settings.gameplay.coinRadius )
 			{
 				level.setCellAt( touchedTile, Tiles::getEmpty() );
 				++collectedCoins;
@@ -613,7 +622,7 @@ public:
 
 			for ( const Enemy& enemy : enemies )
 			{
-				if ( Vector2Distance( heroCenter, enemy.position ) <= gameplayOptions.enemyRadius )
+				if ( Vector2Distance( heroCenter, enemy.position ) <= settings.gameplay.enemyRadius )
 				{
 					failed = true;
 				}
@@ -706,7 +715,7 @@ private:
 			const float halfLength = Vector2Distance( startPosition, endPosition );
 			const float fullLength = halfLength * 2;
 
-			enemy.progress += gameplayOptions.enemySpeed * deltaTime;
+			enemy.progress += settings.gameplay.enemySpeed * deltaTime;
 			enemy.progress = std::fmod( enemy.progress, fullLength );
 
 			if ( enemy.progress < halfLength )
@@ -724,9 +733,9 @@ class GameFlow
 {
 public:
 	const Tiles& tiles;
-	const GameplayOptions& gameplayOptions;
+	const Settings& settings;
 
-	GameFlow( const Tiles& _tiles, const GameplayOptions& _gameplayOptions ) : tiles( _tiles ), gameplayOptions( _gameplayOptions )
+	GameFlow( const Tiles& _tiles, const Settings& _settings ) : tiles( _tiles ), settings( _settings )
 	{
 		currentHandler = &GameFlow::splashScreen;
 	}
@@ -760,7 +769,7 @@ private:
 	{
 		filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
 		level.reset( new Level( levelPath ) );
-		session.reset( new Session( tiles, *level, gameplayOptions ) );
+		session.reset( new Session( tiles, *level, settings ) );
 
 		currentHandler = &GameFlow::play;
 	}
@@ -785,14 +794,14 @@ private:
 		BeginMode2D( session->gameplayCamera );
 		session->render();
 
-		//if ( pathDebugDraw && !session->currentPath.empty() )
-		//{
-		//	for ( int i = 0; i < session->currentPath.size() - 1; ++i )
-		//	{
-		//		DrawLineV( Vector2{ float( session->currentPath.at( i ).coords.x ) + 0.5f, float( session->currentPath.at( i ).coords.y ) + 0.5f },
-		//			Vector2{ float( session->currentPath.at( i + 1 ).coords.x ) + 0.5f, float( session->currentPath.at( i + 1 ).coords.y ) + 0.5f }, BLUE );
-		//	}
-		//}
+		if ( settings.debug.pathDebugDraw && !session->currentPath.empty() )
+		{
+			for ( int i = 0; i < session->currentPath.size() - 1; ++i )
+			{
+				DrawLineV( Vector2{ float( session->currentPath.at( i ).coords.x ) + 0.5f, float( session->currentPath.at( i ).coords.y ) + 0.5f },
+					Vector2{ float( session->currentPath.at( i + 1 ).coords.x ) + 0.5f, float( session->currentPath.at( i + 1 ).coords.y ) + 0.5f }, BLUE );
+			}
+		}
 
 		EndMode2D();
 
@@ -884,15 +893,12 @@ int main()
 	}
 
 	Tiles tiles( "tiles.png", 64 );
-	GameplayOptions gameplayOptions;
-	GameFlow flow( tiles, gameplayOptions );
+	Settings settings;
+	GameFlow flow( tiles, settings );
 
 	Camera2D debugCamera;
 	memset( &debugCamera, 0, sizeof( Camera2D ) );
 	debugCamera.zoom = 64.0f;
-
-	bool enableDebugCamera = false;
-	bool pathDebugDraw = false;
 
 	while ( !WindowShouldClose() )
 	{
@@ -900,35 +906,35 @@ int main()
 		ImGui_ImplRaylib_ProcessEvent();
 		ImGui::NewFrame();
 
-		if ( ImGui::CollapsingHeader( "Camera" ) )
+		if ( ImGui::Begin( "Settings" ) )
 		{
-			ImGui::Checkbox( "Enable Debug Camera", &enableDebugCamera );
-			if ( enableDebugCamera )
+			if ( ImGui::CollapsingHeader( "Gameplay" ) )
 			{
-				ImGui::DragFloat2( "Offset", &debugCamera.offset.x );
-				ImGui::DragFloat2( "Target", &debugCamera.target.x, 0.1f );
-				ImGui::DragFloat( "Rotation", &debugCamera.rotation );
-				ImGui::DragFloat( "Zoom", &debugCamera.zoom );
-				if ( ImGui::Button( "Reset" ) )
+				ImGui::DragFloat( "Steps per Second", &settings.gameplay.heroStepsPerSecond, 0.01f );
+				ImGui::SliderFloat( "Coin Collision Radius", &settings.gameplay.coinRadius, 0, 0.5f );
+				ImGui::DragFloat( "Enemy Speed", &settings.gameplay.enemySpeed, 0.01f );
+				ImGui::SliderFloat( "Enemy Collision Radius", &settings.gameplay.enemyRadius, 0, 0.5f );
+			}
+
+			if ( ImGui::CollapsingHeader( "Debug" ) )
+			{
+				ImGui::Checkbox( "Enable Debug Camera", &settings.debug.enableDebugCamera );
+				if ( settings.debug.enableDebugCamera )
 				{
-					memset( &debugCamera, 0, sizeof( Camera2D ) );
-					debugCamera.zoom = 64;
+					ImGui::DragFloat2( "Offset", &debugCamera.offset.x );
+					ImGui::DragFloat2( "Target", &debugCamera.target.x, 0.1f );
+					ImGui::DragFloat( "Rotation", &debugCamera.rotation );
+					ImGui::DragFloat( "Zoom", &debugCamera.zoom );
+					if ( ImGui::Button( "Reset" ) )
+					{
+						memset( &debugCamera, 0, sizeof( Camera2D ) );
+						debugCamera.zoom = 64;
+					}
 				}
+				ImGui::Checkbox( "Hero Path", &settings.debug.pathDebugDraw );
 			}
 		}
-
-		if ( ImGui::CollapsingHeader( "Gameplay" ) )
-		{
-			ImGui::DragFloat( "Steps per Second", &gameplayOptions.heroStepsPerSecond, 0.01f );
-			ImGui::SliderFloat( "Coin Collision Radius", &gameplayOptions.coinRadius, 0, 0.5f );
-			ImGui::DragFloat( "Enemy Speed", &gameplayOptions.enemySpeed, 0.01f );
-			ImGui::SliderFloat( "Enemy Collision Radius", &gameplayOptions.enemyRadius, 0, 0.5f );
-		}
-
-		if ( ImGui::CollapsingHeader( "Debug Draw" ) )
-		{
-			ImGui::Checkbox( "Hero Path", &pathDebugDraw );
-		}
+		ImGui::End();
 
 		BeginDrawing();
 		{
