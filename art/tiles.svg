@@ -17,7 +17,7 @@
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="tiles.svg"
-   inkscape:export-filename="D:\Projects\experiments\robodaniel\art\tiles.png"
+   inkscape:export-filename="D:\Projects\experiments\robodaniel\build\tiles.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -29,9 +29,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="413.26461"
-     inkscape:cy="944.6752"
+     inkscape:zoom="3.959798"
+     inkscape:cx="164.66143"
+     inkscape:cy="592.69605"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="true"
@@ -64,7 +64,8 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="categories"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect896"
@@ -142,7 +143,8 @@
      inkscape:label="objects"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-26.06665)">
+     transform="translate(0,-26.06665)"
+     style="display:inline">
     <rect
        style="fill:#312dd7;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4532"
@@ -196,6 +198,24 @@
        xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Tiles/grassMid.png"
        preserveAspectRatio="none"
        height="16.933334"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Buildings expansion\Tiles\windowOpen.png"
+       y="127.66665"
+       x="16.933334"
+       id="image950"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Buildings%20expansion/Tiles/windowOpen.png"
+       preserveAspectRatio="none"
+       height="16.933332"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Buildings expansion\Tiles\windowLeadlight.png"
+       y="127.66665"
+       x="33.866669"
+       id="image961"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Buildings%20expansion/Tiles/windowLeadlight.png"
+       preserveAspectRatio="none"
+       height="16.933332"
        width="16.933332" />
   </g>
 </svg>

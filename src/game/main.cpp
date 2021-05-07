@@ -54,9 +54,14 @@ public:
 		return -1;
 	}
 
-	static int isGround( const int tile )
+	static bool isGround( const int tile )
 	{
 		return tile >= 0 && tile < 32;
+	}
+
+	static bool isImpassable( const int tile )
+	{
+		return isGround( tile ) || tile == getClosedExit();
 	}
 
 	static int getHero()
@@ -69,7 +74,17 @@ public:
 		return 96;
 	}
 
-	static int isEnemy( const int tile )
+	static int getClosedExit()
+	{
+		return 97;
+	}
+
+	static int getOpenExit()
+	{
+		return 98;
+	}
+
+	static bool isEnemy( const int tile )
 	{
 		return tile >= 128 && tile < 160;
 	}
@@ -118,6 +133,11 @@ public:
 
 	void setCellAt( const Vector2Int& coords, const int tile )
 	{
+		if ( coords.x < 0 || coords.x >= size.x || coords.y < 0 || coords.y >= size.y )
+		{
+			throw std::exception( "Coords out of bounds" );
+		}
+
 		const int cellIndex = coords.y * size.x + coords.x;
 		cells.at( cellIndex ) = tile;
 	}
@@ -135,6 +155,8 @@ public:
 				}
 			}
 		}
+
+		return Vector2Int{ -1, -1 };
 	}
 
 	vector<Vector2Int> findAllCells( const int tile )
@@ -228,7 +250,7 @@ public:
 			{
 				if ( move.flags & MoveFlags_NeedsSolidBottom )
 				{
-					if ( position.y + 1 >= map.getSize().y || !Tiles::isGround( map.getCellAt( Vector2Int{ position.x, position.y + 1 } ) ) )
+					if ( position.y + 1 >= map.getSize().y || !Tiles::isImpassable( map.getCellAt( Vector2Int{ position.x, position.y + 1 } ) ) )
 					{
 						continue;
 					}
@@ -244,7 +266,7 @@ public:
 					{
 						break;
 					}
-					if ( Tiles::isGround( map.getCellAt( stepPosition ) ) )
+					if ( Tiles::isImpassable( map.getCellAt( stepPosition ) ) )
 					{
 						break;
 					}
@@ -504,6 +526,11 @@ int main()
 			{
 				testbed.setCellAt( touchedTile, Tiles::getEmpty() );
 				++collectedCoins;
+				if ( collectedCoins == totalCoins )
+				{
+					const Vector2Int doorPosition = testbed.findFirstCell( Tiles::getClosedExit() );
+					testbed.setCellAt( doorPosition, Tiles::getOpenExit() );
+				}
 			}
 		}
 
