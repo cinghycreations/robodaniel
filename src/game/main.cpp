@@ -879,8 +879,9 @@ int main()
 		ImGuiIO& io = ImGui::GetIO();
 		unsigned char* pixels = NULL;
 		int width, height;
+		int bytesPerPixel;
 		io.Fonts->AddFontDefault();
-		io.Fonts->GetTexDataAsRGBA32( &pixels, &width, &height, nullptr );
+		io.Fonts->GetTexDataAsRGBA32( &pixels, &width, &height, &bytesPerPixel );
 
 		Image image;
 		memset( &image, 0, sizeof( Image ) );
@@ -888,8 +889,8 @@ int main()
 		image.height = height;
 		image.mipmaps = 1;
 		image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
-		image.data = RL_MALLOC( width * height * 4 );
-		memcpy( image.data, pixels, width * height * 4 );
+		image.data = RL_MALLOC( width * height * bytesPerPixel );
+		memcpy( image.data, pixels, width * height * bytesPerPixel );
 
 		fontTexture = LoadTextureFromImage( image );
 		io.Fonts->SetTexID( &fontTexture.id );
