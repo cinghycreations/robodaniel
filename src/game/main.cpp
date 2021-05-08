@@ -774,7 +774,7 @@ private:
 
 	void splashScreen()
 	{
-		if ( ImGui::Begin( "Splash Screen", false, ImGuiWindowFlags_NoDecoration ) )
+		if ( ImGui::Begin( "Splash Screen", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Press start to begin" );
 			if ( ImGui::Button( "Start" ) )
@@ -841,7 +841,7 @@ private:
 		session->render();
 		EndMode2D();
 
-		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration ) )
+		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Level completed in %.3f seconds! Press continue", session->totalTime );
 			if ( ImGui::Button( "Continue" ) )
@@ -870,7 +870,7 @@ private:
 		session->render();
 		EndMode2D();
 
-		if ( ImGui::Begin( "Session failed", false, ImGuiWindowFlags_NoDecoration ) )
+		if ( ImGui::Begin( "Session failed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Level failed! Press retry" );
 			if ( ImGui::Button( "Retry" ) )
