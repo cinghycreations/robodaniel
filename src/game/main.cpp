@@ -754,8 +754,9 @@ class GameFlow
 public:
 	const Tiles& tiles;
 	const Settings& settings;
+	ImFont* uiFont;
 
-	GameFlow( const Tiles& _tiles, const Settings& _settings ) : tiles( _tiles ), settings( _settings )
+	GameFlow( const Tiles& _tiles, const Settings& _settings, ImFont* _uiFont ) : tiles( _tiles ), settings( _settings ), uiFont( _uiFont )
 	{
 		currentHandler = &GameFlow::splashScreen;
 	}
@@ -772,8 +773,31 @@ private:
 	unique_ptr<Session> session;
 	int nextLevel = 0;
 
+	void pushUiStyle()
+	{
+		ImGui::PushFont( uiFont );
+		ImGui::PushStyleColor( ImGuiCol_WindowBg, ImVec4( 0, 0, 0, 0 ) );
+		ImGui::PushStyleColor( ImGuiCol_Text, ImVec4( 0, 0, 0, 1 ) );
+		ImGui::PushStyleColor( ImGuiCol_Border, ImVec4( 0, 0, 0, 0 ) );
+	}
+
+	void popUiStyle()
+	{
+		ImGui::PopStyleColor( 3 );
+		ImGui::PopFont();
+	}
+
+	void centerWindowForText( const string& text )
+	{
+		const ImVec2 textSize = ImGui::CalcTextSize( text.c_str() );
+		const ImVec2 displaySize = ImGui::GetIO().DisplaySize;
+		ImGui::SetNextWindowPos( ImVec2( displaySize.x * 0.5f - textSize.x / 2, displaySize.y * 0.25f ) );
+	}
+
 	void splashScreen()
 	{
+		pushUiStyle();
+		centerWindowForText( "Press start to begin" );
 		if ( ImGui::Begin( "Splash Screen", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Press start to begin" );
@@ -784,6 +808,7 @@ private:
 			}
 		}
 		ImGui::End();
+		popUiStyle();
 	}
 
 	void initSession()
@@ -803,12 +828,14 @@ private:
 		// Render UI
 		{
 			ImGui::SetNextWindowPos( ImVec2( 30, 30 ) );
+			pushUiStyle();
 			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
 			{
 				ImGui::Text( "Coins: %d / %d", session->collectedCoins, session->totalCoins );
 				ImGui::Text( "Time %.3f", session->totalTime );
 			}
 			ImGui::End();
+			popUiStyle();
 		}
 
 		// Render level
@@ -841,9 +868,11 @@ private:
 		session->render();
 		EndMode2D();
 
+		pushUiStyle();
+		centerWindowForText( "Level completed in xx.xxx seconds!" );
 		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
-			ImGui::Text( "Level completed in %.3f seconds! Press continue", session->totalTime );
+			ImGui::Text( "Level completed in %.3f seconds!", session->totalTime );
 			if ( ImGui::Button( "Continue" ) )
 			{
 				session.reset();
@@ -862,6 +891,7 @@ private:
 			}
 		}
 		ImGui::End();
+		popUiStyle();
 	}
 
 	void sessionFailed()
@@ -870,9 +900,11 @@ private:
 		session->render();
 		EndMode2D();
 
+		pushUiStyle();
+		centerWindowForText( "Level failed!" );
 		if ( ImGui::Begin( "Session failed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
-			ImGui::Text( "Level failed! Press retry" );
+			ImGui::Text( "Level failed!" );
 			if ( ImGui::Button( "Retry" ) )
 			{
 				session.reset();
@@ -882,6 +914,7 @@ private:
 			}
 		}
 		ImGui::End();
+		popUiStyle();
 	}
 };
 
@@ -894,15 +927,19 @@ int main()
 	ImGui::StyleColorsDark();
 	ImGui_ImplRaylib_Init();
 	Texture2D fontTexture;
+	ImFont* uiFont = nullptr;
 	{
 		extern unsigned int droidsans_compressed_size;
 		extern unsigned int droidsans_compressed_data[];
+		extern unsigned int proggytiny_compressed_size;
+		extern unsigned int proggytiny_compressed_data[];
 
 		ImGuiIO& io = ImGui::GetIO();
 		unsigned char* pixels = NULL;
 		int width, height;
 		int bytesPerPixel;
 		io.Fonts->AddFontFromMemoryCompressedTTF( droidsans_compressed_data, droidsans_compressed_size, 18.0f );
+		uiFont = io.Fonts->AddFontFromMemoryCompressedTTF( proggytiny_compressed_data, proggytiny_compressed_size, 48.0f );
 		io.Fonts->GetTexDataAsRGBA32( &pixels, &width, &height, &bytesPerPixel );
 
 		Image image;
@@ -921,7 +958,7 @@ int main()
 
 	Tiles tiles( "tiles.png", 64 );
 	Settings settings;
-	GameFlow flow( tiles, settings );
+	GameFlow flow( tiles, settings, uiFont );
 	bool showSettings = false;
 
 	while ( !WindowShouldClose() )
