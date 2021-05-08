@@ -19,11 +19,14 @@ int main()
 	ImGui_ImplRaylib_Init();
 	Texture2D fontTexture;
 	{
+		extern unsigned int droidsans_compressed_size;
+		extern unsigned int droidsans_compressed_data[];
+
 		ImGuiIO& io = ImGui::GetIO();
 		unsigned char* pixels = NULL;
 		int width, height;
 		int bytesPerPixel;
-		io.Fonts->AddFontDefault();
+		io.Fonts->AddFontFromMemoryCompressedTTF( droidsans_compressed_data, droidsans_compressed_size, 18.0f );
 		io.Fonts->GetTexDataAsRGBA32( &pixels, &width, &height, &bytesPerPixel );
 
 		Image image;
