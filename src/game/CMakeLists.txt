@@ -5,6 +5,7 @@ add_executable( game
 	cimgui_impl_raylib.hpp
 	intmath.hpp
 	main.cpp
+	droidsans.cpp
 )
 
 target_include_directories( game PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" )
