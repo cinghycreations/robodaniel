@@ -17,24 +17,26 @@ int main()
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplRaylib_Init();
+	Texture2D fontTexture;
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		unsigned char* pixels = NULL;
 		int width, height;
+		int bytesPerPixel;
 		io.Fonts->AddFontDefault();
-		io.Fonts->GetTexDataAsRGBA32( &pixels, &width, &height, nullptr );
+		io.Fonts->GetTexDataAsRGBA32( &pixels, &width, &height, &bytesPerPixel );
 
 		Image image;
 		memset( &image, 0, sizeof( Image ) );
 		image.width = width;
 		image.height = height;
 		image.mipmaps = 1;
-		image.format = UNCOMPRESSED_R8G8B8A8;
-		image.data = RL_MALLOC( width * height * 4 );
-		memcpy( image.data, pixels, width * height * 4 );
+		image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+		image.data = RL_MALLOC( width * height * bytesPerPixel );
+		memcpy( image.data, pixels, width * height * bytesPerPixel );
 
-		Texture2D texture = LoadTextureFromImage( image );
-		io.Fonts->SetTexID( &texture.id );
+		fontTexture = LoadTextureFromImage( image );
+		io.Fonts->SetTexID( &fontTexture.id );
 		UnloadImage( image );
 	}
 
@@ -51,7 +53,6 @@ int main()
 			ImGui::ShowDemoWindow();
 			ImGui::Render();
 			raylib_render_cimgui( ImGui::GetDrawData() );
-
 		}
 		EndDrawing();
 	}

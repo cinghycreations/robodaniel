@@ -258,7 +258,7 @@ void draw_triangle_vertex( ImDrawVert idx_vert )
 void raylib_render_draw_triangles( unsigned int count, const ImDrawIdx* idx_buffer, const ImDrawVert* idx_vert, unsigned int texture_id )
 {
 	rlBegin( RL_TRIANGLES );
-	rlEnableTexture( texture_id );
+	rlSetTexture( texture_id );
 	// Draw the imgui triangle data
 	for ( unsigned int i = 0; i <= ( count - 3 ); i += 3 )
 	{
@@ -277,7 +277,7 @@ void raylib_render_draw_triangles( unsigned int count, const ImDrawIdx* idx_buff
 		vertex = idx_vert[ index ];
 		draw_triangle_vertex( vertex );
 	}
-	rlDisableTexture();
+	rlSetTexture( 0 );
 	rlEnd();
 }
 
