@@ -561,6 +561,25 @@ public:
 
 	void step()
 	{
+		if ( ImGui::BeginMainMenuBar() )
+		{
+			if ( ImGui::BeginMenu( "Session" ) )
+			{
+				if ( ImGui::MenuItem( "Complete" ) )
+				{
+					completed = true;
+					return;
+				}
+				if ( ImGui::MenuItem( "Fail" ) )
+				{
+					failed = true;
+					return;
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+
 		totalTime += GetFrameTime();
 
 		// Set camera
@@ -783,7 +802,7 @@ private:
 
 		// Render UI
 		{
-			ImGui::SetNextWindowPos( ImVec2( 10, 10 ) );
+			ImGui::SetNextWindowPos( ImVec2( 30, 30 ) );
 			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
 			{
 				ImGui::Text( "Coins: %d / %d", session->collectedCoins, session->totalCoins );
@@ -900,6 +919,7 @@ int main()
 	Tiles tiles( "tiles.png", 64 );
 	Settings settings;
 	GameFlow flow( tiles, settings );
+	bool showSettings = false;
 
 	while ( !WindowShouldClose() )
 	{
@@ -907,35 +927,52 @@ int main()
 		ImGui_ImplRaylib_ProcessEvent();
 		ImGui::NewFrame();
 
-		if ( ImGui::Begin( "Settings" ) )
+		if ( ImGui::BeginMainMenuBar() )
 		{
-			if ( ImGui::CollapsingHeader( "Gameplay" ) )
+			if ( ImGui::BeginMenu( "Game" ) )
 			{
-				ImGui::DragFloat( "Steps per Second", &settings.gameplay.heroStepsPerSecond, 0.01f );
-				ImGui::SliderFloat( "Coin Collision Radius", &settings.gameplay.coinRadius, 0, 0.5f );
-				ImGui::DragFloat( "Enemy Speed", &settings.gameplay.enemySpeed, 0.01f );
-				ImGui::SliderFloat( "Enemy Collision Radius", &settings.gameplay.enemyRadius, 0, 0.5f );
-			}
-
-			if ( ImGui::CollapsingHeader( "Debug" ) )
-			{
-				ImGui::Checkbox( "Enable Debug Camera", &settings.debug.enableDebugCamera );
-				if ( settings.debug.enableDebugCamera )
+				ImGui::MenuItem( "Show Settings", nullptr, &showSettings );
+				if ( ImGui::MenuItem( "Quit" ) )
 				{
-					ImGui::DragFloat2( "Offset", &settings.debug.debugCamera.offset.x );
-					ImGui::DragFloat2( "Target", &settings.debug.debugCamera.target.x, 0.1f );
-					ImGui::DragFloat( "Rotation", &settings.debug.debugCamera.rotation );
-					ImGui::DragFloat( "Zoom", &settings.debug.debugCamera.zoom );
-					if ( ImGui::Button( "Reset" ) )
-					{
-						memset( &settings.debug.debugCamera, 0, sizeof( Camera2D ) );
-						settings.debug.debugCamera.zoom = 64;
-					}
+					break;
 				}
-				ImGui::Checkbox( "Hero Path", &settings.debug.pathDebugDraw );
+				ImGui::EndMenu();
 			}
+			ImGui::EndMainMenuBar();
 		}
-		ImGui::End();
+
+		if ( showSettings )
+		{
+			if ( ImGui::Begin( "Settings" ) )
+			{
+				if ( ImGui::CollapsingHeader( "Gameplay" ) )
+				{
+					ImGui::DragFloat( "Steps per Second", &settings.gameplay.heroStepsPerSecond, 0.01f );
+					ImGui::SliderFloat( "Coin Collision Radius", &settings.gameplay.coinRadius, 0, 0.5f );
+					ImGui::DragFloat( "Enemy Speed", &settings.gameplay.enemySpeed, 0.01f );
+					ImGui::SliderFloat( "Enemy Collision Radius", &settings.gameplay.enemyRadius, 0, 0.5f );
+				}
+
+				if ( ImGui::CollapsingHeader( "Debug" ) )
+				{
+					ImGui::Checkbox( "Enable Debug Camera", &settings.debug.enableDebugCamera );
+					if ( settings.debug.enableDebugCamera )
+					{
+						ImGui::DragFloat2( "Offset", &settings.debug.debugCamera.offset.x );
+						ImGui::DragFloat2( "Target", &settings.debug.debugCamera.target.x, 0.1f );
+						ImGui::DragFloat( "Rotation", &settings.debug.debugCamera.rotation );
+						ImGui::DragFloat( "Zoom", &settings.debug.debugCamera.zoom );
+						if ( ImGui::Button( "Reset" ) )
+						{
+							memset( &settings.debug.debugCamera, 0, sizeof( Camera2D ) );
+							settings.debug.debugCamera.zoom = 64;
+						}
+					}
+					ImGui::Checkbox( "Hero Path", &settings.debug.pathDebugDraw );
+				}
+			}
+			ImGui::End();
+		}
 
 		BeginDrawing();
 		{
@@ -948,5 +985,6 @@ int main()
 		EndDrawing();
 	}
 
+	CloseWindow();
 	return 0;
 }
