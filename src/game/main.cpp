@@ -887,7 +887,7 @@ int main()
 		image.width = width;
 		image.height = height;
 		image.mipmaps = 1;
-		image.format = UNCOMPRESSED_R8G8B8A8;
+		image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
 		image.data = RL_MALLOC( width * height * 4 );
 		memcpy( image.data, pixels, width * height * 4 );
 
