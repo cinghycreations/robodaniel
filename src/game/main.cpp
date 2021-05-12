@@ -1010,6 +1010,13 @@ int main()
 			if ( ImGui::BeginMenu( "Game" ) )
 			{
 				ImGui::MenuItem( "Show Settings", nullptr, &showSettings );
+				if ( ImGui::MenuItem( "Create blank savegame" ) )
+				{
+					ofstream stream( "storage.data" );
+					array<int, 100> blanckData;
+					std::fill( blanckData.begin(), blanckData.end(), 0 );
+					stream.rdbuf()->sputn( reinterpret_cast<const char*>( blanckData.data() ), sizeof( int ) * blanckData.size() );
+				}
 				if ( ImGui::MenuItem( "Quit" ) )
 				{
 					break;
