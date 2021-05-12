@@ -8,6 +8,8 @@
 #include <queue>
 #include <filesystem>
 #include <functional>
+#include <optional>
+#include <array>
 
 #define RAYMATH_IMPLEMENTATION
 #include <raymath.h>
@@ -789,6 +791,7 @@ private:
 	unique_ptr<Level> level;
 	unique_ptr<Session> session;
 	int nextLevel = 0;
+	optional<float> bestTime;
 
 	void pushUiStyle()
 	{
@@ -802,6 +805,18 @@ private:
 	{
 		ImGui::PopStyleColor( 3 );
 		ImGui::PopFont();
+	}
+
+	void saveBestTime( const int level, const float bestTime )
+	{
+		const int timeMs = int( bestTime * 1000 );
+		SaveStorageValue( level, timeMs );
+	}
+
+	optional<float> loadBestTime( const int level )
+	{
+		const int timeMs = LoadStorageValue( level );
+		return timeMs == 0 ? optional<float>() : optional<float>( float( timeMs ) / 1000 );
 	}
 
 	void splashScreen()
@@ -826,6 +841,7 @@ private:
 		filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
 		level.reset( new Level( levelPath ) );
 		session.reset( new Session( tiles, *level, settings ) );
+		bestTime = loadBestTime( nextLevel );
 
 		currentHandler = &GameFlow::play;
 	}
@@ -843,6 +859,10 @@ private:
 			{
 				ImGui::Text( "Coins: %2d/%2d", session->collectedCoins, session->totalCoins );
 				ImGui::Text( "Time %7.3f", session->totalTime );
+				if ( bestTime.has_value() )
+				{
+					ImGui::Text( "Best %7.3f", *bestTime );
+				}
 			}
 			ImGui::End();
 			popUiStyle();
@@ -866,6 +886,10 @@ private:
 		if ( session->completed )
 		{
 			currentHandler = &GameFlow::sessionCompleted;
+			if ( !bestTime.has_value() || session->totalTime < *bestTime )
+			{
+				saveBestTime( nextLevel, session->totalTime );
+			}
 		} else if ( session->failed )
 		{
 			currentHandler = &GameFlow::sessionFailed;
@@ -883,6 +907,10 @@ private:
 		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Level completed in %.3f seconds!", session->totalTime );
+			if ( !bestTime.has_value() || session->totalTime < *bestTime )
+			{
+				ImGui::Text( "New best time!", session->totalTime );
+			}
 			if ( ImGui::CenteredButton( "Continue" ) )
 			{
 				session.reset();
