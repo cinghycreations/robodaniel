@@ -25,8 +25,10 @@ namespace ImGui {
 	void CenterWindowForText( const string& text )
 	{
 		const ImVec2 textSize = ImGui::CalcTextSize( text.c_str() );
+		const float windowWidth = textSize.x + 100;
 		const ImVec2 displaySize = ImGui::GetIO().DisplaySize;
-		ImGui::SetNextWindowPos( ImVec2( displaySize.x * 0.5f - textSize.x / 2, displaySize.y * 0.25f ) );
+		ImGui::SetNextWindowPos( ImVec2( displaySize.x * 0.5f - windowWidth / 2, windowWidth * 0.25f ) );
+		ImGui::SetNextWindowSize( ImVec2( windowWidth, 0 ) );
 	}
 
 	bool CenteredButton( const char* label )
@@ -774,6 +776,7 @@ public:
 	const Tiles& tiles;
 	const Settings& settings;
 	ImFont* uiFont;
+	bool shutdownRequested = false;
 
 	GameFlow( const Tiles& _tiles, const Settings& _settings, ImFont* _uiFont ) : tiles( _tiles ), settings( _settings ), uiFont( _uiFont )
 	{
@@ -787,6 +790,8 @@ public:
 
 private:
 	function<void( GameFlow* )> currentHandler;
+
+	static const int maxLevels = 10;
 
 	unique_ptr<Level> level;
 	unique_ptr<Session> session;
@@ -822,14 +827,59 @@ private:
 	void splashScreen()
 	{
 		pushUiStyle();
-		ImGui::CenterWindowForText( "Press start to begin" );
+		ImGui::CenterWindowForText( "Robodaniel" );
 		if ( ImGui::Begin( "Splash Screen", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
-			ImGui::Text( "Press start to begin" );
-			if ( ImGui::CenteredButton( "Start" ) )
+			ImGui::Text( "Robodaniel" );
+			if ( ImGui::CenteredButton( "Play" ) )
 			{
 				nextLevel = 0;
 				currentHandler = &GameFlow::initSession;
+			}
+			if ( ImGui::CenteredButton( "Best Times" ) )
+			{
+				currentHandler = &GameFlow::loadBestTimes;
+			}
+			if ( ImGui::CenteredButton( "Quit" ) )
+			{
+				shutdownRequested = true;
+			}
+		}
+		ImGui::End();
+		popUiStyle();
+	}
+
+	void loadBestTimes()
+	{
+		array< optional<float>, maxLevels > bestTimes;
+
+		for ( int i = 0; i < maxLevels; ++i )
+		{
+			bestTimes.at( i ) = loadBestTime( i );
+		}
+
+		currentHandler = std::bind( &GameFlow::showBestTimes, this, bestTimes );
+	}
+
+	void showBestTimes( const array< optional<float>, maxLevels > bestTimes )
+	{
+		pushUiStyle();
+		ImGui::CenterWindowForText( "Level XX      XXX.XXX s" );
+		if ( ImGui::Begin( "Best times", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
+		{
+			for ( int i = 0; i < maxLevels; ++i )
+			{
+				if ( bestTimes.at( i ).has_value() )
+				{
+					ImGui::Text( "Level %2d      %7.3f s", i + 1, *bestTimes.at( i ) );
+				} else
+				{
+					ImGui::Text( "Level %2d      ------- s", i + 1 );
+				}
+			}
+			if ( ImGui::CenteredButton( "Back" ) )
+			{
+				currentHandler = &GameFlow::splashScreen;
 			}
 		}
 		ImGui::End();
@@ -911,7 +961,7 @@ private:
 			{
 				ImGui::Text( "New best time!", session->totalTime );
 			}
-			if ( ImGui::CenteredButton( "Continue" ) )
+			if ( ImGui::CenteredButton( "Next Level" ) )
 			{
 				session.reset();
 				level.reset();
@@ -920,12 +970,22 @@ private:
 				filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
 				if ( !filesystem::exists( levelPath ) )
 				{
-					nextLevel = 0;
 					currentHandler = &GameFlow::splashScreen;
 				} else
 				{
 					currentHandler = &GameFlow::initSession;
 				}
+			}
+			if ( ImGui::CenteredButton( "Retry" ) )
+			{
+				session.reset();
+				level.reset();
+
+				currentHandler = &GameFlow::initSession;
+			}
+			if ( ImGui::CenteredButton( "Main Menu" ) )
+			{
+				currentHandler = &GameFlow::splashScreen;
 			}
 		}
 		ImGui::End();
@@ -949,6 +1009,10 @@ private:
 				level.reset();
 
 				currentHandler = &GameFlow::initSession;
+			}
+			if ( ImGui::CenteredButton( "Main Menu" ) )
+			{
+				currentHandler = &GameFlow::splashScreen;
 			}
 		}
 		ImGui::End();
@@ -1063,6 +1127,10 @@ int main()
 		{
 			ClearBackground( RAYWHITE );
 			flow.step();
+			if ( flow.shutdownRequested )
+			{
+				break;
+			}
 
 			ImGui::Render();
 			raylib_render_cimgui( ImGui::GetDrawData() );
