@@ -19,6 +19,23 @@
 
 using namespace std;
 
+namespace ImGui {
+	void CenterWindowForText( const string& text )
+	{
+		const ImVec2 textSize = ImGui::CalcTextSize( text.c_str() );
+		const ImVec2 displaySize = ImGui::GetIO().DisplaySize;
+		ImGui::SetNextWindowPos( ImVec2( displaySize.x * 0.5f - textSize.x / 2, displaySize.y * 0.25f ) );
+	}
+
+	bool CenteredButton( const char* label )
+	{
+		const ImVec2 textSize = ImGui::CalcTextSize( label );
+		ImGui::NewLine();
+		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
+		return ImGui::Button( label );
+	}
+}
+
 class Tiles
 {
 public:
@@ -787,21 +804,14 @@ private:
 		ImGui::PopFont();
 	}
 
-	void centerWindowForText( const string& text )
-	{
-		const ImVec2 textSize = ImGui::CalcTextSize( text.c_str() );
-		const ImVec2 displaySize = ImGui::GetIO().DisplaySize;
-		ImGui::SetNextWindowPos( ImVec2( displaySize.x * 0.5f - textSize.x / 2, displaySize.y * 0.25f ) );
-	}
-
 	void splashScreen()
 	{
 		pushUiStyle();
-		centerWindowForText( "Press start to begin" );
+		ImGui::CenterWindowForText( "Press start to begin" );
 		if ( ImGui::Begin( "Splash Screen", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Press start to begin" );
-			if ( ImGui::Button( "Start" ) )
+			if ( ImGui::CenteredButton( "Start" ) )
 			{
 				nextLevel = 0;
 				currentHandler = &GameFlow::initSession;
@@ -831,8 +841,8 @@ private:
 			pushUiStyle();
 			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
 			{
-				ImGui::Text( "Coins: %d / %d", session->collectedCoins, session->totalCoins );
-				ImGui::Text( "Time %.3f", session->totalTime );
+				ImGui::Text( "Coins: %2d/%2d", session->collectedCoins, session->totalCoins );
+				ImGui::Text( "Time %7.3f", session->totalTime );
 			}
 			ImGui::End();
 			popUiStyle();
@@ -869,11 +879,11 @@ private:
 		EndMode2D();
 
 		pushUiStyle();
-		centerWindowForText( "Level completed in xx.xxx seconds!" );
+		ImGui::CenterWindowForText( "Level completed in xx.xxx seconds!" );
 		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Level completed in %.3f seconds!", session->totalTime );
-			if ( ImGui::Button( "Continue" ) )
+			if ( ImGui::CenteredButton( "Continue" ) )
 			{
 				session.reset();
 				level.reset();
@@ -901,11 +911,11 @@ private:
 		EndMode2D();
 
 		pushUiStyle();
-		centerWindowForText( "Level failed!" );
+		ImGui::CenterWindowForText( "Level failed!" );
 		if ( ImGui::Begin( "Session failed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Level failed!" );
-			if ( ImGui::Button( "Retry" ) )
+			if ( ImGui::CenteredButton( "Retry" ) )
 			{
 				session.reset();
 				level.reset();
