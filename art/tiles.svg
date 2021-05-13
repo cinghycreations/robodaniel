@@ -18,8 +18,8 @@
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="tiles.svg"
    inkscape:export-filename="D:\Projects\experiments\robodaniel\build\tiles.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
+   inkscape:export-xdpi="192"
+   inkscape:export-ydpi="192">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -30,22 +30,22 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.959798"
-     inkscape:cx="164.66143"
-     inkscape:cy="592.69605"
+     inkscape:cx="28.124802"
+     inkscape:cy="989.10177"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-y="1072"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
        id="grid815"
-       spacingx="4.2333334"
-       spacingy="4.2333334"
+       spacingx="16.933333"
+       spacingy="16.933333"
        empspacing="4" />
   </sodipodi:namedview>
   <metadata
@@ -64,7 +64,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="categories"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.26342416;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -145,24 +145,6 @@
      id="layer1"
      transform="translate(0,-26.06665)"
      style="display:inline">
-    <rect
-       style="fill:#312dd7;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4532"
-       width="8.4666662"
-       height="16.933332"
-       x="4.2333331"
-       y="59.933315" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="4.0996966"
-       y="69.578857"
-       id="text4536"><tspan
-         sodipodi:role="line"
-         id="tspan4534"
-         x="4.0996966"
-         y="69.578857"
-         style="font-size:3.52777767px;stroke-width:0.26458332">Hero</tspan></text>
     <image
        sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\HUD\hud_coins.png"
        y="131.89998"
@@ -189,7 +171,8 @@
        xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Tiles/grassCenter.png"
        preserveAspectRatio="none"
        height="16.933332"
-       width="16.933334" />
+       width="16.933334"
+       style="image-rendering:optimizeSpeed" />
     <image
        sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Base pack\Tiles\grassMid.png"
        y="26.066647"
@@ -198,7 +181,8 @@
        xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Base%20pack/Tiles/grassMid.png"
        preserveAspectRatio="none"
        height="16.933334"
-       width="16.933332" />
+       width="16.933332"
+       style="opacity:1;image-rendering:optimizeSpeed" />
     <image
        sodipodi:absref="D:\Projects\experiments\robodaniel\temp\platformer-art-complete-pack-0\Buildings expansion\Tiles\windowOpen.png"
        y="127.66665"
@@ -216,6 +200,264 @@
        xlink:href="file:///D:/Projects/experiments/robodaniel/temp/platformer-art-complete-pack-0/Buildings%20expansion/Tiles/windowLeadlight.png"
        preserveAspectRatio="none"
        height="16.933332"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (1).png"
+       y="60.261826"
+       x="0"
+       id="image851"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(1).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332"
+       inkscape:transform-center-x="66.145834"
+       inkscape:transform-center-y="48.380953" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (2).png"
+       y="60.261826"
+       x="16.933334"
+       id="image862"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(2).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (3).png"
+       y="60.261826"
+       x="33.866669"
+       id="image873"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(3).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (4).png"
+       y="60.261826"
+       x="50.799999"
+       id="image884"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(4).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (5).png"
+       y="60.261826"
+       x="67.733337"
+       id="image895"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(5).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (6).png"
+       y="60.261826"
+       x="84.666672"
+       id="image906"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(6).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (7).png"
+       y="60.261826"
+       x="101.6"
+       id="image917"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(7).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (8).png"
+       y="60.261826"
+       x="118.53333"
+       id="image928"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(8).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332"
+       inkscape:transform-center-x="53.453906"
+       inkscape:transform-center-y="75.904547" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (9).png"
+       y="60.261826"
+       x="135.46667"
+       id="image939"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(9).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332"
+       inkscape:transform-center-x="25.657875"
+       inkscape:transform-center-y="75.370008" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Idle (10).png"
+       y="60.261826"
+       x="152.40001"
+       id="image950-7"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Idle%20(10).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (1).png"
+       y="77.195168"
+       x="5.5676355e-07"
+       id="image972"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(1).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (2).png"
+       y="77.195168"
+       x="16.933334"
+       id="image983"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(2).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (3).png"
+       y="77.195168"
+       x="33.866665"
+       id="image994"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(3).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (4).png"
+       y="77.195168"
+       x="50.799999"
+       id="image1005"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(4).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (5).png"
+       y="77.195168"
+       x="67.73333"
+       id="image1016"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(5).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (6).png"
+       y="77.195168"
+       x="84.666664"
+       id="image1027"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(6).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (7).png"
+       y="77.195168"
+       x="101.6"
+       id="image1038"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(7).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (8).png"
+       y="77.195168"
+       x="118.53333"
+       id="image1049"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(8).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (9).png"
+       y="77.195168"
+       x="135.46666"
+       id="image1060"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(9).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Jump (10).png"
+       y="77.195168"
+       x="152.39999"
+       id="image1071"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Jump%20(10).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (1).png"
+       y="94.128502"
+       x="5.5676162e-07"
+       id="image1082"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(1).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (2).png"
+       y="94.128502"
+       x="16.933332"
+       id="image1093"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(2).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (3).png"
+       y="94.128502"
+       x="33.866665"
+       id="image1104"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(3).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (4).png"
+       y="94.128502"
+       x="50.799999"
+       id="image1115"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(4).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (5).png"
+       y="94.128502"
+       x="67.73333"
+       id="image1126"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(5).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (6).png"
+       y="94.128502"
+       x="84.666664"
+       id="image1137"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(6).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (7).png"
+       y="94.128502"
+       x="101.6"
+       id="image1148"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(7).png"
+       preserveAspectRatio="none"
+       height="16.60482"
+       width="16.933332" />
+    <image
+       sodipodi:absref="D:\Projects\experiments\robodaniel\temp\robotfree\png\Run (8).png"
+       y="94.128502"
+       x="118.53333"
+       id="image1159"
+       xlink:href="file:///D:/Projects/experiments/robodaniel/temp/robotfree/png/Run%20(8).png"
+       preserveAspectRatio="none"
+       height="16.60482"
        width="16.933332" />
   </g>
 </svg>

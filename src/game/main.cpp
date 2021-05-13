@@ -1058,7 +1058,7 @@ int main()
 		UnloadImage( image );
 	}
 
-	Tiles tiles( "tiles.png", 64 );
+	Tiles tiles( "tiles.png", 128 );
 	Settings settings;
 	GameFlow flow( tiles, settings, uiFont );
 	bool showSettings = false;
