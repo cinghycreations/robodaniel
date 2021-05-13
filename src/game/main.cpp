@@ -92,6 +92,24 @@ public:
 		return 32;
 	}
 
+	static const vector<int> getHeroIdleAnimation()
+	{
+		static const vector<int> animation{ 32, 33, 34, 35, 36, 37, 38, 39, 40, 41 };
+		return animation;
+	}
+
+	static const vector<int> getHeroJumpAnimation()
+	{
+		static const vector<int> animation{ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+		return animation;
+	}
+
+	static const vector<int> getHeroRunAnimation()
+	{
+		static const vector<int> animation{ 64, 65, 66, 67, 68, 69, 70, 71 };
+		return animation;
+	}
+
 	static int getCoin()
 	{
 		return 96;
@@ -519,6 +537,7 @@ struct Settings
 	struct
 	{
 		float heroStepsPerSecond = 16;
+		float heroAnimationFps = 10.0f;
 		float coinRadius = 0.4f;
 		float enemySpeed = 4;
 		float enemyRadius = 0.5f;
@@ -697,7 +716,11 @@ public:
 		}
 
 		// Draw hero
-		DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getHero() ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
+		{
+			const vector<int>& idleAnimation = Tiles::getHeroIdleAnimation();
+			const int frame = int( totalTime * settings.gameplay.heroAnimationFps ) % idleAnimation.size();
+			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( idleAnimation.at( frame ) ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
+		}
 
 		// Draw enemies
 		for ( const Enemy& enemy : enemies )
@@ -1096,7 +1119,8 @@ int main()
 			{
 				if ( ImGui::CollapsingHeader( "Gameplay" ) )
 				{
-					ImGui::DragFloat( "Steps per Second", &settings.gameplay.heroStepsPerSecond, 0.01f );
+					ImGui::DragFloat( "Hero steps per Second", &settings.gameplay.heroStepsPerSecond, 0.01f );
+					ImGui::SliderFloat( "Hero Animation FPS", &settings.gameplay.heroAnimationFps, 0.1f, 60.0f );
 					ImGui::SliderFloat( "Coin Collision Radius", &settings.gameplay.coinRadius, 0, 0.5f );
 					ImGui::DragFloat( "Enemy Speed", &settings.gameplay.enemySpeed, 0.01f );
 					ImGui::SliderFloat( "Enemy Collision Radius", &settings.gameplay.enemyRadius, 0, 0.5f );
