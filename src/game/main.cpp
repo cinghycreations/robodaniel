@@ -21,6 +21,17 @@
 
 using namespace std;
 
+class BaseException : public std::exception
+{
+public:
+	BaseException( const string& _message ) : message( _message ) { }
+
+	const char* what() const noexcept override { return message.c_str(); }
+
+protected:
+	const string message;
+};
+
 namespace ImGui {
 	void CenterWindowForText( const string& text )
 	{
@@ -283,7 +294,7 @@ public:
 	{
 		if ( coords.x < 0 || coords.x >= size.x || coords.y < 0 || coords.y >= size.y )
 		{
-			throw std::exception( "Coords out of bounds" );
+			throw BaseException( "Coords out of bounds" );
 		}
 
 		const int cellIndex = coords.y * size.x + coords.x;
@@ -780,7 +791,7 @@ private:
 			const float fullLength = halfLength * 2;
 
 			enemy.progress += settings.gameplay.enemySpeed * deltaTime;
-			enemy.progress = std::fmod( enemy.progress, fullLength );
+			enemy.progress = fmod( enemy.progress, fullLength );
 
 			if ( enemy.progress < halfLength )
 			{
