@@ -851,7 +851,7 @@ private:
 	{
 		pushUiStyle();
 		ImGui::CenterWindowForText( "Robodaniel" );
-		if ( ImGui::Begin( "Splash Screen", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
+		if ( ImGui::Begin( "Splash Screen", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Robodaniel" );
 			if ( ImGui::CenteredButton( "Play" ) )
@@ -888,7 +888,7 @@ private:
 	{
 		pushUiStyle();
 		ImGui::CenterWindowForText( "Level XX      XXX.XXX s" );
-		if ( ImGui::Begin( "Best times", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
+		if ( ImGui::Begin( "Best times", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			for ( int i = 0; i < maxLevels; ++i )
 			{
@@ -928,7 +928,7 @@ private:
 		{
 			ImGui::SetNextWindowPos( ImVec2( 30, 30 ) );
 			pushUiStyle();
-			if ( ImGui::Begin( "HUD", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
+			if ( ImGui::Begin( "HUD", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
 			{
 				ImGui::Text( "Coins: %2d/%2d", session->collectedCoins, session->totalCoins );
 				ImGui::Text( "Time %7.3f", session->totalTime );
@@ -977,12 +977,12 @@ private:
 
 		pushUiStyle();
 		ImGui::CenterWindowForText( "Level completed in xx.xxx seconds!" );
-		if ( ImGui::Begin( "Session completed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
+		if ( ImGui::Begin( "Session completed", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Level completed in %.3f seconds!", session->totalTime );
 			if ( !bestTime.has_value() || session->totalTime < *bestTime )
 			{
-				ImGui::Text( "New best time!", session->totalTime );
+				ImGui::Text( "New best time!" );
 			}
 			if ( ImGui::CenteredButton( "Next Level" ) )
 			{
@@ -1023,7 +1023,7 @@ private:
 
 		pushUiStyle();
 		ImGui::CenterWindowForText( "Level failed!" );
-		if ( ImGui::Begin( "Session failed", false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
+		if ( ImGui::Begin( "Session failed", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::Text( "Level failed!" );
 			if ( ImGui::CenteredButton( "Retry" ) )
