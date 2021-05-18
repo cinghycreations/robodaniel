@@ -12,6 +12,10 @@
 			display: block
 		}
 
+		div.emscripten {
+			text-align: center
+		}
+
 		canvas.emscripten {
 			border: 0 none;
 			background-color: #000
@@ -19,13 +23,12 @@
 	</style>
 </head>
 <body>
-	<figure id=spinner style=overflow:visible>
-		<div class=spinner></div>
-		<center style=margin-top:.5em><strong>emscripten</strong></center>
-	</figure>
-	<div id=status>Downloading...</div>
-	<progress hidden id=progress max=100 value=0></progress>
-	<input type=button onclick='Module.requestFullscreen(false,true)' value=Fullscreen>
+	<figure id=spinner></figure>
+	<div class=emscripten id=status>Downloading...</div>
+	<div class=emscripten>
+		<progress hidden id=progress max=100 value=0></progress>
+	</div>
+	<input type=button class=emscripten onclick='Module.requestFullscreen(false,true)' value=Fullscreen>
 	<canvas class=emscripten id=canvas oncontextmenu=event.preventDefault() tabindex=-1></canvas>
 	<script>
 		var statusElement = document.getElementById( "status" ),
