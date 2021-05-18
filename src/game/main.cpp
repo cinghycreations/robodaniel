@@ -103,21 +103,39 @@ public:
 		return 32;
 	}
 
-	static const vector<int> getHeroIdleAnimation()
+	static const vector<int>& getHeroIdleAnimation()
 	{
 		static const vector<int> animation{ 32, 33, 34, 35, 36, 37, 38, 39, 40, 41 };
 		return animation;
 	}
 
-	static const vector<int> getHeroJumpAnimation()
+	static const vector<int>& getHeroIdleMirroredAnimation()
 	{
-		static const vector<int> animation{ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+		static const vector<int> animation{ 42, 43, 44, 45, 46, 47, 48, 49, 50, 51 };
 		return animation;
 	}
 
-	static const vector<int> getHeroRunAnimation()
+	static const vector<int>& getHeroJumpAnimation()
 	{
-		static const vector<int> animation{ 64, 65, 66, 67, 68, 69, 70, 71 };
+		static const vector<int> animation{ 52, 53, 54, 55, 56, 57, 58, 59, 60, 61 };
+		return animation;
+	}
+
+	static const vector<int>& getHeroJumpMirroredAnimation()
+	{
+		static const vector<int> animation{ 62, 63, 64, 65, 66, 67, 68, 69, 70, 71 };
+		return animation;
+	}
+
+	static const vector<int>& getHeroRunAnimation()
+	{
+		static const vector<int> animation{ 72, 73, 74, 75, 76, 77, 78, 79 };
+		return animation;
+	}
+
+	static const vector<int>& getHeroRunMirroredAnimation()
+	{
+		static const vector<int> animation{ 80, 81, 82, 83, 84, 85, 86, 87 };
 		return animation;
 	}
 
@@ -346,18 +364,20 @@ struct PathPoint
 {
 	Vector2 coords;
 	float progress;
+	unsigned int moveFlags;
+};
+
+enum MoveFlags
+{
+	MoveFlags_None = 0x0,
+	MoveFlags_NeedsSolidBottom = 0x1,
+	MoveFlags_JumpAnimation = 0x2,
+	MoveFlags_MirroredAnimation = 0x4,
 };
 
 class Pathfinder
 {
 private:
-
-	enum MoveFlags
-	{
-		MoveFlags_None = 0x0,
-		MoveFlags_NeedsSolidBottom = 0x1,
-	};
-
 	struct Move
 	{
 		string description;
@@ -368,12 +388,12 @@ private:
 	const vector<Move> moves
 	{
 		{ "Right", MoveFlags_NeedsSolidBottom, { { 1, 0 } } },
-		{ "Right Long Jump", MoveFlags_NeedsSolidBottom, { { 1, -1 }, { 2, -1 }, { 3, 0 } } },
-		{ "Right High Jump", MoveFlags_NeedsSolidBottom, { { 0, -1 }, { 0, -2 }, { 0, -3 }, { 1, -3 } } },
-		{ "Left", MoveFlags_NeedsSolidBottom, { { -1, 0 } } },
-		{ "Left Long Jump", MoveFlags_NeedsSolidBottom, { { -1, -1 }, { -2, -1 }, { -3, 0 } } },
-		{ "Left High Jump", MoveFlags_NeedsSolidBottom, { { 0, -1 }, { 0, -2 }, { 0, -3 }, { -1, -3 } } },
-		{ "Gravity", MoveFlags_None, { { 0, 1 } } },
+		{ "Right Long Jump", MoveFlags_NeedsSolidBottom | MoveFlags_JumpAnimation, { { 1, -1 }, { 2, -1 }, { 3, 0 } } },
+		{ "Right High Jump", MoveFlags_NeedsSolidBottom | MoveFlags_JumpAnimation, { { 0, -1 }, { 0, -2 }, { 0, -3 }, { 1, -3 } } },
+		{ "Left", MoveFlags_NeedsSolidBottom | MoveFlags_MirroredAnimation, { { -1, 0 } } },
+		{ "Left Long Jump", MoveFlags_NeedsSolidBottom | MoveFlags_MirroredAnimation | MoveFlags_JumpAnimation, { { -1, -1 }, { -2, -1 }, { -3, 0 } } },
+		{ "Left High Jump", MoveFlags_NeedsSolidBottom | MoveFlags_MirroredAnimation | MoveFlags_JumpAnimation, { { 0, -1 }, { 0, -2 }, { 0, -3 }, { -1, -3 } } },
+		{ "Gravity", MoveFlags_JumpAnimation, { { 0, 1 } } },
 	};
 
 public:
@@ -390,6 +410,7 @@ public:
 		{
 			float shortestPath = -1;
 			vector<Vector2Int> trajectory;
+			unsigned int moveFlags;
 		};
 
 		vector<CellState> cellStates( level.getSize().x * level.getSize().y );
@@ -443,6 +464,7 @@ public:
 					{
 						cell.shortestPath = currentPathLength;
 						cell.trajectory = trajectory;
+						cell.moveFlags = move.flags;
 
 						if ( step == trajectory.size() - 1 )
 						{
@@ -482,7 +504,7 @@ public:
 		for ( int i = 1; i < pathPositions.size(); ++i )
 		{
 			const CellState& cell = cellAt( pathPositions.at( i ) );
-			vector<PathPoint> smoothPath = catmullClark( cell.trajectory, 2, progressOffset );
+			vector<PathPoint> smoothPath = catmullClark( cell.trajectory, 2, progressOffset, cell.moveFlags );
 			trajectory.insert( trajectory.end(), smoothPath.begin() + 1, smoothPath.end() );
 			progressOffset += cell.trajectory.size() - 1;
 		}
@@ -494,12 +516,12 @@ private:
 	const Tiles& tiles;
 	const Level& level;
 
-	vector<PathPoint> catmullClark( const vector<Vector2Int> path, const int iterations, const float progressOffset )
+	vector<PathPoint> catmullClark( const vector<Vector2Int> path, const int iterations, const float progressOffset, const unsigned int moveFlags )
 	{
 		vector<PathPoint> points;
 		for ( int i = 0; i < path.size(); ++i )
 		{
-			points.push_back( PathPoint{ Vector2IntToFloat( path.at( i ) ), progressOffset + i } );
+			points.push_back( PathPoint{ Vector2IntToFloat( path.at( i ) ), progressOffset + i, moveFlags } );
 		}
 
 		if ( points.size() < 3 )
@@ -517,6 +539,7 @@ private:
 				PathPoint midpoint;
 				midpoint.coords = Vector2Scale( Vector2Add( points.at( i ).coords, points.at( i + 1 ).coords ), 0.5f );
 				midpoint.progress = ( points.at( i ).progress + points.at( i + 1 ).progress ) / 2;
+				midpoint.moveFlags = moveFlags;
 				midpoints.push_back( midpoint );
 			}
 
@@ -531,6 +554,7 @@ private:
 				newPoint.coords.x = points.at( i + 1 ).coords.x * 0.5f + midpoints.at( i ).coords.x * 0.25f + midpoints.at( i + 1 ).coords.x * 0.25f;
 				newPoint.coords.y = points.at( i + 1 ).coords.y * 0.5f + midpoints.at( i ).coords.y * 0.25f + midpoints.at( i + 1 ).coords.y * 0.25f;
 				newPoint.progress = points.at( i + 1 ).progress;
+				newPoint.moveFlags = moveFlags;
 				subdivided.push_back( newPoint );
 			}
 			subdivided.push_back( midpoints.back() );
@@ -582,6 +606,7 @@ public:
 
 	Vector2Int heroTile;
 	Vector2 heroPosition;
+	unsigned int heroMoveFlags;
 
 	Pathfinder pathfinder;
 	vector<PathPoint> currentPath;
@@ -646,6 +671,7 @@ public:
 			const Vector2Int destination{ int( worldPosition.x ), int( worldPosition.y ) };
 			currentPath = pathfinder.goTo( currentPosition, destination );
 			progress = 0;
+			heroMoveFlags = MoveFlags_None;
 		}
 
 		// Move hero
@@ -657,6 +683,7 @@ public:
 				heroPosition = currentPath.back().coords;
 				currentPath.clear();
 				progress = 0;
+				heroMoveFlags = MoveFlags_None;
 			} else
 			{
 				for ( int i = 0; i < currentPath.size() - 1; ++i )
@@ -665,6 +692,7 @@ public:
 					{
 						const float blend = ( progress - currentPath.at( i ).progress ) / ( currentPath.at( i + 1 ).progress - currentPath.at( i ).progress );
 						heroPosition = Vector2Lerp( currentPath.at( i ).coords, currentPath.at( i + 1 ).coords, blend );
+						heroMoveFlags = currentPath.at( i + 1 ).moveFlags;
 					}
 				}
 			}
@@ -728,9 +756,33 @@ public:
 
 		// Draw hero
 		{
-			const vector<int>& idleAnimation = Tiles::getHeroIdleAnimation();
-			const int frame = int( totalTime * settings.gameplay.heroAnimationFps ) % idleAnimation.size();
-			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( idleAnimation.at( frame ) ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
+			const vector<int>* animation;
+
+			if ( currentPath.empty() )
+			{
+				animation = &Tiles::getHeroIdleAnimation();
+			} else if ( heroMoveFlags & MoveFlags_JumpAnimation )
+			{
+				if ( heroMoveFlags & MoveFlags_MirroredAnimation )
+				{
+					animation = &Tiles::getHeroJumpMirroredAnimation();
+				} else
+				{
+					animation = &Tiles::getHeroJumpAnimation();
+				}
+			} else
+			{
+				if ( heroMoveFlags & MoveFlags_MirroredAnimation )
+				{
+					animation = &Tiles::getHeroRunMirroredAnimation();
+				} else
+				{
+					animation = &Tiles::getHeroRunAnimation();
+				}
+			}
+
+			const int frame = int( totalTime * settings.gameplay.heroAnimationFps ) % animation->size();
+			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( animation->at( frame ) ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
 		}
 
 		// Draw enemies
