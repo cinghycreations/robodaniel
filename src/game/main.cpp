@@ -17,8 +17,6 @@
 #include <imgui.h>
 #include <cimgui_impl_raylib.hpp>
 
-#pragma optimize("",off)
-
 using namespace std;
 
 class BaseException : public std::exception
