@@ -49,6 +49,18 @@ namespace ImGui {
 		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
 		return ImGui::Button( label );
 	}
+
+#ifdef __RELEASE
+	bool BeginDevMenuBar()
+	{
+		return false;
+	}
+#else
+	bool BeginDevMenuBar()
+	{
+		return BeginMainMenuBar();
+	}
+#endif
 }
 
 class Tiles
@@ -637,7 +649,7 @@ public:
 
 	void step()
 	{
-		if ( ImGui::BeginMainMenuBar() )
+		if ( ImGui::BeginDevMenuBar() )
 		{
 			if ( ImGui::BeginMenu( "Session" ) )
 			{
@@ -1155,7 +1167,7 @@ int main()
 		ImGui_ImplRaylib_ProcessEvent();
 		ImGui::NewFrame();
 
-		if ( ImGui::BeginMainMenuBar() )
+		if ( ImGui::BeginDevMenuBar() )
 		{
 			if ( ImGui::BeginMenu( "Game" ) )
 			{
