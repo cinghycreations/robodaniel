@@ -13,3 +13,6 @@ endif ()
 add_subdirectory( raylib )
 add_subdirectory( src/ImGui )
 add_subdirectory( src/game )
+
+install( TARGETS game DESTINATION "${CMAKE_INSTALL_PREFIX}" )
+install( DIRECTORY "build/" DESTINATION "${CMAKE_INSTALL_PREFIX}" PATTERN "imgui.ini" EXCLUDE PATTERN "storage.data" EXCLUDE )
