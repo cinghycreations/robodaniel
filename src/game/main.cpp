@@ -963,15 +963,26 @@ private:
 		ImGui::CenterWindowForText( "Level XX      XXX.XXX s" );
 		if ( ImGui::Begin( "Best times", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
+			float total = 0;
+			bool hasTotal = true;
 			for ( int i = 0; i < maxLevels; ++i )
 			{
 				if ( bestTimes.at( i ).has_value() )
 				{
 					ImGui::Text( "Level %2d      %7.3f s", i + 1, *bestTimes.at( i ) );
+					total += *bestTimes.at( i );
 				} else
 				{
 					ImGui::Text( "Level %2d      ------- s", i + 1 );
+					hasTotal = false;
 				}
+			}
+			if ( hasTotal )
+			{
+				ImGui::Text( "Total         %7.3f s", total );
+			} else
+			{
+				ImGui::Text( "Total         ------- s" );
 			}
 			if ( ImGui::CenteredButton( "Back" ) )
 			{
@@ -1057,18 +1068,14 @@ private:
 			{
 				ImGui::Text( "New best time!" );
 			}
-			if ( ImGui::CenteredButton( "Next Level" ) )
+			if ( nextLevel + 1 < maxLevels )
 			{
-				session.reset();
-				level.reset();
+				if ( ImGui::CenteredButton( "Next Level" ) )
+				{
+					session.reset();
+					level.reset();
 
-				++nextLevel;
-				filesystem::path levelPath = string( "level" ) + to_string( nextLevel ) + ".csv";
-				if ( !filesystem::exists( levelPath ) )
-				{
-					currentHandler = &GameFlow::splashScreen;
-				} else
-				{
+					++nextLevel;
 					currentHandler = &GameFlow::initSession;
 				}
 			}
@@ -1081,6 +1088,9 @@ private:
 			}
 			if ( ImGui::CenteredButton( "Main Menu" ) )
 			{
+				session.reset();
+				level.reset();
+
 				currentHandler = &GameFlow::splashScreen;
 			}
 		}
