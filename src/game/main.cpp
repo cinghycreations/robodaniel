@@ -100,7 +100,7 @@ public:
 
 	static bool isGround( const int tile )
 	{
-		return tile >= 0 && tile < 32;
+		return tile == 0 || tile == 1;
 	}
 
 	static bool isImpassable( const int tile )
@@ -151,22 +151,22 @@ public:
 
 	static int getCoin()
 	{
-		return 96;
+		return 2;
 	}
 
 	static int getClosedExit()
 	{
-		return 97;
+		return 3;
 	}
 
 	static int getOpenExit()
 	{
-		return 98;
+		return 4;
 	}
 
 	static int getEnemy()
 	{
-		return 128;
+		return 5;
 	}
 
 	static bool isEnemyBlueprint( const int tile )

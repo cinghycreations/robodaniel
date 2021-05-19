@@ -4,10 +4,10 @@
   <export target="../build/level0.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="tiles.tsx"/>
- <tileset firstgid="257" source="enemies.tsx"/>
+ <tileset firstgid="97" source="enemies.tsx"/>
  <layer id="2" name="Tile Layer 1" width="24" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFwwUwIWEQSKSSubjMYcIhTgpAdzMyYKSC+fgAuebjczM1zCcFwOKGkFtA6hRJMA8EkhgQ/mRkwO5vJgKYAY9aRjwYBvCpAWFWRuLVkmM+EwlqyTGfgQS1tDAfAEHMAvo=
+   eJztkVEKgDAMQ9PqRTyc97/C6MdwiMtIqT/ig/yM8EgZ8PMVfEiwFXlnHp+8K9w3j1iBn5H1s80VfoX+N6st0TsEX7DjutPwfLcvAtI1kg7rRE6hm/G70M34IXTf8DfICwEl
   </data>
  </layer>
 </map>
