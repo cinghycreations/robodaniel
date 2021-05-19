@@ -2,5 +2,7 @@
 /build/** filter=lfs diff=lfs merge=lfs -text
 *.json !filter !diff !merge !text
 *.csv !filter !diff !merge !text
+*.tmx !filter !diff !merge !text
+*.tsx !filter !diff !merge !text
 . !text !filter !merge !diff
 *.* !text !filter !merge !diff
