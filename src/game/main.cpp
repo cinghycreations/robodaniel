@@ -877,6 +877,17 @@ public:
 	GameFlow( const Tiles& _tiles, const Settings& _settings, ImFont* _uiFont ) : tiles( _tiles ), settings( _settings ), uiFont( _uiFont )
 	{
 		currentHandler = &GameFlow::splashScreen;
+
+		// Workaround for LoadStorageValue() returning random value for slots where we never called SaveStorageValue(), except for when the savegame if absent altogether
+		int hasSavegame = LoadStorageValue( 0 );
+		if ( !hasSavegame )
+		{
+			SaveStorageValue( 0, 1 );
+			for ( int i = 0; i < maxLevels; ++i )
+			{
+				SaveStorageValue( i + 1, 0 );
+			}
+		}
 	}
 
 	void step()
@@ -911,12 +922,12 @@ private:
 	void saveBestTime( const int level, const float bestTime )
 	{
 		const int timeMs = int( bestTime * 1000 );
-		SaveStorageValue( level, timeMs );
+		SaveStorageValue( level + 1, timeMs );
 	}
 
 	optional<float> loadBestTime( const int level )
 	{
-		const int timeMs = LoadStorageValue( level );
+		const int timeMs = LoadStorageValue( level + 1 );
 		return timeMs == 0 ? optional<float>() : optional<float>( float( timeMs ) / 1000 );
 	}
 
@@ -1185,6 +1196,7 @@ int main()
 					ofstream stream( "storage.data" );
 					array<int, 100> blanckData;
 					std::fill( blanckData.begin(), blanckData.end(), 0 );
+					blanckData.at( 0 ) = 1;
 					stream.rdbuf()->sputn( reinterpret_cast<const char*>( blanckData.data() ), sizeof( int ) * blanckData.size() );
 				}
 				if ( ImGui::MenuItem( "Quit" ) )
