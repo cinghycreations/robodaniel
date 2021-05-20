@@ -17,5 +17,7 @@ add_subdirectory( raylib )
 add_subdirectory( src/ImGui )
 add_subdirectory( src/game )
 
+set_target_properties( game PROPERTIES OUTPUT_NAME robodaniel )
+
 install( TARGETS game DESTINATION "${CMAKE_INSTALL_PREFIX}" )
 install( DIRECTORY "build/" DESTINATION "${CMAKE_INSTALL_PREFIX}" PATTERN "imgui.ini" EXCLUDE PATTERN "storage.data" EXCLUDE )
