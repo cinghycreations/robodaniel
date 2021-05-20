@@ -934,6 +934,18 @@ private:
 	void splashScreen()
 	{
 		pushUiStyle();
+
+		{
+			const ImVec2 textSize = ImGui::CalcTextSize( "v" BUILD_VERSION );
+			ImGui::SetNextWindowPos( ImGui::GetIO().DisplaySize, 0, ImVec2( 1, 1 ) );
+			ImGui::SetNextWindowSize( ImVec2( textSize.x + ImGui::GetStyle().WindowPadding.x, textSize.y + ImGui::GetStyle().WindowPadding.y ) );
+			if ( ImGui::Begin( "Version", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings ) )
+			{
+				ImGui::Text( "v" BUILD_VERSION );
+			}
+			ImGui::End();
+		}
+
 		ImGui::CenterWindowForText( "Robodaniel" );
 		if ( ImGui::Begin( "Splash Screen", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
