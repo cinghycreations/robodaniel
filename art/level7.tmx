@@ -7,7 +7,7 @@
  <tileset firstgid="97" source="enemies.tsx"/>
  <layer id="2" name="Tile Layer 1" width="25" height="27">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFQx0w0sF8GKaV+SxofGqbj+4HWvqHHoCZyuZhCxtqh1kOBXpJBbjCh5JwIzZ8sIlTArIp1E8KoEa6wpdmsJUlgzVfEgoLSuVxpZ98BsJpDJt+UkA6DvFkMszCBigNG2SAHg4FDLjDhRg+MeGVQYL7QCAFj5wiEpsYf5OqBltaGYoYAPuhBBQ=
+   eJxjYBgFQx0w0sF8GKaV+SxofGqbj+4HWvqHHoCZyuZhCxtqh1kOBXpJBbjCh5JwIzZ8sIlTArIp1E8KoEa6wpdmsJUlgzVfEgoLSuVxpZ98BsJpDJt+UkA6DvFkMszCBigNG2SAHg4FDLjDhRg+MeGVQYL7QCAFj5wiEpsYf5OqhokOGFt6pDYGAAqIBC0=
   </data>
  </layer>
 </map>
