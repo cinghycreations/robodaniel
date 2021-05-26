@@ -48,6 +48,14 @@ namespace ImGui {
 		return ImGui::Button( label );
 	}
 
+	void CenteredText( const char* label )
+	{
+		const ImVec2 textSize = ImGui::CalcTextSize( label );
+		ImGui::NewLine();
+		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
+		ImGui::Text( label );
+	}
+
 #ifdef __RELEASE
 	bool BeginDevMenuBar()
 	{
@@ -949,7 +957,7 @@ private:
 		ImGui::CenterWindowForText( "Robodaniel" );
 		if ( ImGui::Begin( "Splash Screen", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
-			ImGui::Text( "Robodaniel" );
+			ImGui::CenteredText( "Robodaniel" );
 			if ( ImGui::CenteredButton( "Play" ) )
 			{
 				nextLevel = 0;
