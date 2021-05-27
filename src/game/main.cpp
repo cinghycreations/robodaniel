@@ -759,6 +759,12 @@ public:
 
 	void render()
 	{
+		// Draw enemies
+		for ( const Enemy& enemy : enemies )
+		{
+			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getEnemy() ), Rectangle{ enemy.position.x - 0.5f, enemy.position.y - 0.5f, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
+		}
+
 		// Draw world
 		for ( int i = 0; i < level.getSize().y; ++i )
 		{
@@ -801,12 +807,6 @@ public:
 
 			const int frame = int( totalTime * settings.gameplay.heroAnimationFps ) % animation->size();
 			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( animation->at( frame ) ), Rectangle{ heroPosition.x, heroPosition.y, 1, 1 }, Vector2{ 0, 0 }, 0, WHITE );
-		}
-
-		// Draw enemies
-		for ( const Enemy& enemy : enemies )
-		{
-			DrawTexturePro( tiles.getTexture(), tiles.getRectangleForTile( Tiles::getEnemy() ), Rectangle{ enemy.position.x - 0.5f, enemy.position.y - 0.5f, 1, 1 }, Vector2{ 0,0 }, 0, WHITE );
 		}
 	}
 
