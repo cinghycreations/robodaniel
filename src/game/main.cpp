@@ -1018,17 +1018,17 @@ private:
 	void credits()
 	{
 		pushUiStyle();
-		ImGui::CenterWindowForText( "Tile art by Kenney Vleugels (www.kenney.nl)" );
+		ImGui::CenterWindowForText( "ProggyTiny font by Tristan Grimmer" );
 		if ( ImGui::Begin( "Best times", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::CenteredText( "Robodaniel v" BUILD_VERSION );
 			ImGui::CenteredText( "Copyright (c) 2021 Alessandro Piva" );
 			ImGui::CenteredText( "" );
-			ImGui::CenteredText( "Tile art by Kenney Vleugels (www.kenney.nl)" );
-			ImGui::CenteredText( "Licensed under Creative Common Zero" );
-			ImGui::CenteredText( "" );
+			ImGui::CenteredText( "raylib by Ramon Santamaria" );
+			ImGui::CenteredText( "ImGui by Omar Cornut" );
+			ImGui::CenteredText( "Tile art by Kenney Vleugels" );
 			ImGui::CenteredText( "Robot art by GameArt2D.com" );
-			ImGui::CenteredText( "Licensed under Creative Common Zero" );
+			ImGui::CenteredText( "ProggyTiny font by Tristan Grimmer" );
 			if ( ImGui::CenteredButton( "Back" ) )
 			{
 				currentHandler = &GameFlow::splashScreen;
