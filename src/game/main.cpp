@@ -994,7 +994,7 @@ private:
 				char caption[ 32 ];
 				sprintf( caption, "Level %2d", i + 1 );
 
-				if ( bestTimes.at( i ).has_value() )
+				if ( bestTimes.at( i ).has_value() || ( i == 0 ) || ( i > 0 && bestTimes.at( i - 1 ).has_value() ) )
 				{
 					if ( ImGui::CenteredButton( caption ) )
 					{
