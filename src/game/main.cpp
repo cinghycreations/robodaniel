@@ -1104,13 +1104,17 @@ private:
 		{
 			ImGui::SetNextWindowPos( ImVec2( 30, 30 ) );
 			pushUiStyle();
-			if ( ImGui::Begin( "HUD", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize ) )
+			if ( ImGui::Begin( "HUD", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 			{
 				ImGui::Text( "Coins: %2d/%2d", session->collectedCoins, session->totalCoins );
 				ImGui::Text( "Time %7.3f", session->totalTime );
 				if ( bestTime.has_value() )
 				{
 					ImGui::Text( "Best %7.3f", *bestTime );
+				}
+				if ( ImGui::Button( "Back" ) )
+				{
+					currentHandler = &GameFlow::splashScreen;
 				}
 			}
 			ImGui::End();
@@ -1200,7 +1204,7 @@ private:
 		ImGui::CenterWindowForText( "Level failed!" );
 		if ( ImGui::Begin( "Session failed", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
-			ImGui::Text( "Level failed!" );
+			ImGui::CenteredText( "Level failed!" );
 			if ( ImGui::CenteredButton( "Retry" ) )
 			{
 				session.reset();
