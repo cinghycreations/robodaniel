@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-up" width="28" height="28" tilewidth="128" tileheight="128" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-up" width="29" height="14" tilewidth="128" tileheight="128" infinite="0" nextlayerid="3" nextobjectid="1">
  <editorsettings>
   <export target="../build/level3.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="tiles.tsx"/>
  <tileset firstgid="97" source="enemies.tsx"/>
- <layer id="2" name="Tile Layer 1" width="28" height="28">
+ <layer id="2" name="Tile Layer 1" width="29" height="14">
   <data encoding="base64" compression="zlib">
-   eJztU9EKwCAILLcf2f//5NibjNTzarGNDoTA8rzTSllY+Ca2iVyi4k94g4ezPa3qPEq/V+fik0awiGpUI9B+s7D4dH+sdrZPT7sFdjaR9tHIaEJwODkJuND5tPYf9Yh5h+yk1Xv0dzJ8kQYJ3rHwaqJ83mzvuV4+az+e8syaV69nLNB/1Lq3qxzq46g4AVUAAUk=
+   eJxjYBgFtASKOMSZCegjV54JitH56Jia8owE3EptwIjHTlqFK7qdjDgwLeTpBYixk9LwxWcnst2UhB8uOXzqKQWEzEC2k9QwIhWwYLGT3hgASf4AyA==
   </data>
  </layer>
 </map>
