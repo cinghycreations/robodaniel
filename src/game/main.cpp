@@ -1158,7 +1158,7 @@ private:
 			ImGui::Text( "Level completed in %.3f seconds!", session->totalTime );
 			if ( !bestTime.has_value() || session->totalTime < *bestTime )
 			{
-				ImGui::Text( "New best time!" );
+				ImGui::CenteredText( "New best time!" );
 			}
 			if ( nextLevel + 1 < maxLevels )
 			{
