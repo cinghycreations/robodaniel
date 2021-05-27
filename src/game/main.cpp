@@ -36,7 +36,7 @@ namespace ImGui {
 		const ImVec2 textSize = ImGui::CalcTextSize( text.c_str() );
 		const float windowWidth = textSize.x + 100;
 		const ImVec2 displaySize = ImGui::GetIO().DisplaySize;
-		ImGui::SetNextWindowPos( ImVec2( displaySize.x * 0.5f - windowWidth / 2, windowWidth * 0.25f ) );
+		ImGui::SetNextWindowPos( ImVec2( displaySize.x * 0.5f - windowWidth / 2, displaySize.y * 0.1f ) );
 		ImGui::SetNextWindowSize( ImVec2( windowWidth, 0 ) );
 	}
 
