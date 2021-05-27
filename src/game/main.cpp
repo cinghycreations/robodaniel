@@ -943,17 +943,6 @@ private:
 	{
 		pushUiStyle();
 
-		{
-			const ImVec2 textSize = ImGui::CalcTextSize( "v" BUILD_VERSION );
-			ImGui::SetNextWindowPos( ImGui::GetIO().DisplaySize, 0, ImVec2( 1, 1 ) );
-			ImGui::SetNextWindowSize( ImVec2( textSize.x + ImGui::GetStyle().WindowPadding.x, textSize.y + ImGui::GetStyle().WindowPadding.y ) );
-			if ( ImGui::Begin( "Version", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings ) )
-			{
-				ImGui::Text( "v" BUILD_VERSION );
-			}
-			ImGui::End();
-		}
-
 		ImGui::CenterWindowForText( "Robodaniel" );
 		if ( ImGui::Begin( "Splash Screen", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
@@ -967,9 +956,36 @@ private:
 			{
 				currentHandler = &GameFlow::loadBestTimes;
 			}
+			if ( ImGui::CenteredButton( "Credits" ) )
+			{
+				currentHandler = &GameFlow::credits;
+			}
 			if ( ImGui::CenteredButton( "Quit" ) )
 			{
 				shutdownRequested = true;
+			}
+		}
+		ImGui::End();
+		popUiStyle();
+	}
+
+	void credits()
+	{
+		pushUiStyle();
+		ImGui::CenterWindowForText( "Tile art by Kenney Vleugels (www.kenney.nl)" );
+		if ( ImGui::Begin( "Best times", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
+		{
+			ImGui::CenteredText( "Robodaniel v" BUILD_VERSION );
+			ImGui::CenteredText( "Copyright (c) 2021 Alessandro Piva" );
+			ImGui::CenteredText( "" );
+			ImGui::CenteredText( "Tile art by Kenney Vleugels (www.kenney.nl)" );
+			ImGui::CenteredText( "Licensed under Creative Common Zero" );
+			ImGui::CenteredText( "" );
+			ImGui::CenteredText( "Robot art by GameArt2D.com" );
+			ImGui::CenteredText( "Licensed under Creative Common Zero" );
+			if ( ImGui::CenteredButton( "Back" ) )
+			{
+				currentHandler = &GameFlow::splashScreen;
 			}
 		}
 		ImGui::End();
