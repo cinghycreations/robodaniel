@@ -56,6 +56,14 @@ namespace ImGui {
 		ImGui::Text( label );
 	}
 
+	void CenteredTextDisabled( const char* label )
+	{
+		const ImVec2 textSize = ImGui::CalcTextSize( label );
+		ImGui::NewLine();
+		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
+		ImGui::TextDisabled( label );
+	}
+
 #ifdef __RELEASE
 	bool BeginDevMenuBar()
 	{
@@ -952,9 +960,15 @@ private:
 				nextLevel = 0;
 				currentHandler = &GameFlow::initSession;
 			}
+			if ( ImGui::CenteredButton( "Select Level" ) )
+			{
+				auto bestTimes = loadBestTimes();
+				currentHandler = std::bind( &GameFlow::selectLevel, this, bestTimes );
+			}
 			if ( ImGui::CenteredButton( "Best Times" ) )
 			{
-				currentHandler = &GameFlow::loadBestTimes;
+				auto bestTimes = loadBestTimes();
+				currentHandler = std::bind( &GameFlow::showBestTimes, this, bestTimes );
 			}
 			if ( ImGui::CenteredButton( "Credits" ) )
 			{
@@ -963,6 +977,38 @@ private:
 			if ( ImGui::CenteredButton( "Quit" ) )
 			{
 				shutdownRequested = true;
+			}
+		}
+		ImGui::End();
+		popUiStyle();
+	}
+
+	void selectLevel( const array< optional<float>, maxLevels > bestTimes )
+	{
+		pushUiStyle();
+		ImGui::CenterWindowForText( "___Level XX___" );
+		if ( ImGui::Begin( "Select Level", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
+		{
+			for ( int i = 0; i < maxLevels; ++i )
+			{
+				char caption[ 32 ];
+				sprintf( caption, "Level %2d", i + 1 );
+
+				if ( bestTimes.at( i ).has_value() )
+				{
+					if ( ImGui::CenteredButton( caption ) )
+					{
+						nextLevel = i;
+						currentHandler = &GameFlow::initSession;
+					}
+				} else
+				{
+					ImGui::CenteredTextDisabled( caption );
+				}
+			}
+			if ( ImGui::CenteredButton( "Back" ) )
+			{
+				currentHandler = &GameFlow::splashScreen;
 			}
 		}
 		ImGui::End();
@@ -992,16 +1038,15 @@ private:
 		popUiStyle();
 	}
 
-	void loadBestTimes()
+	array< optional<float>, maxLevels > loadBestTimes()
 	{
 		array< optional<float>, maxLevels > bestTimes;
-
 		for ( int i = 0; i < maxLevels; ++i )
 		{
 			bestTimes.at( i ) = loadBestTime( i );
 		}
 
-		currentHandler = std::bind( &GameFlow::showBestTimes, this, bestTimes );
+		return bestTimes;
 	}
 
 	void showBestTimes( const array< optional<float>, maxLevels > bestTimes )
