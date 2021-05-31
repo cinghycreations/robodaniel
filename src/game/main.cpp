@@ -527,12 +527,32 @@ public:
 		vector<PathPoint> trajectory;
 		trajectory.push_back( PathPoint{ Vector2IntToFloat( currentPosition ), 0 } );
 		float progressOffset = 0;
+		Vector2Int lastPosition = currentPosition;
 		for ( int i = 1; i < pathPositions.size(); ++i )
 		{
 			const CellState& cell = cellAt( pathPositions.at( i ) );
 			vector<PathPoint> smoothPath = catmullClark( cell.trajectory, 2, progressOffset, cell.moveFlags );
 			trajectory.insert( trajectory.end(), smoothPath.begin() + 1, smoothPath.end() );
 			progressOffset += cell.trajectory.size() - 1;
+			lastPosition = cell.trajectory.back();
+		}
+
+		while ( true )
+		{
+			const Vector2Int below{ lastPosition.x, lastPosition.y + 1 };
+			if ( below.y >= level.getSize().y )
+			{
+				trajectory.push_back( PathPoint{ Vector2IntToFloat( below ), trajectory.back().progress + 1, MoveFlags_JumpAnimation } );
+				break;
+			} else if ( !Tiles::isImpassable( level.getCellAt( below ) ) )
+			{
+				trajectory.push_back( PathPoint{ Vector2IntToFloat( below ), trajectory.back().progress + 1, MoveFlags_JumpAnimation } );
+				lastPosition = below;
+				continue;
+			} else
+			{
+				break;
+			}
 		}
 
 		return trajectory;
@@ -695,9 +715,13 @@ public:
 			const Vector2 worldPosition = GetScreenToWorld2D( GetMousePosition(), settings.debug.enableDebugCamera ? settings.debug.debugCamera : gameplayCamera );
 			const Vector2Int currentPosition{ int( heroPosition.x ), int( heroPosition.y ) };
 			const Vector2Int destination{ int( worldPosition.x ), int( worldPosition.y ) };
-			currentPath = pathfinder.goTo( currentPosition, destination );
-			progress = 0;
-			heroMoveFlags = MoveFlags_None;
+
+			if ( !( destination.x < 0 || destination.x >= level.getSize().x || destination.y < 0 || destination.y >= level.getSize().y ) )
+			{
+				currentPath = pathfinder.goTo( currentPosition, destination );
+				progress = 0;
+				heroMoveFlags = MoveFlags_None;
+			}
 		}
 
 		// Move hero
@@ -731,25 +755,32 @@ public:
 		{
 			const Vector2 heroCenter{ heroPosition.x + 0.5f, heroPosition.y + 0.5f };
 			const Vector2Int touchedTile{ int( heroCenter.x ), int( heroCenter.y ) };
-			const Vector2 touchedTileCenter{ float( touchedTile.x ) + 0.5f, float( touchedTile.y ) + 0.5f };
-			const float distance = Vector2Distance( heroCenter, touchedTileCenter );
 
-			if ( level.getCellAt( touchedTile ) == Tiles::getCoin() && distance <= settings.gameplay.coinRadius )
+			if ( touchedTile.x < 0 || touchedTile.x >= level.getSize().x || touchedTile.y < 0 || touchedTile.y >= level.getSize().y )
 			{
-				level.setCellAt( touchedTile, Tiles::getEmpty() );
-				++collectedCoins;
-			}
+				failed = true;
+			} else
+			{
+				const Vector2 touchedTileCenter{ float( touchedTile.x ) + 0.5f, float( touchedTile.y ) + 0.5f };
+				const float distance = Vector2Distance( heroCenter, touchedTileCenter );
 
-			if ( level.getCellAt( touchedTile ) == Tiles::getOpenExit() && distance <= 0.1f )
-			{
-				completed = true;
-			}
-
-			for ( const Enemy& enemy : enemies )
-			{
-				if ( Vector2Distance( heroCenter, enemy.position ) <= settings.gameplay.enemyRadius )
+				if ( level.getCellAt( touchedTile ) == Tiles::getCoin() && distance <= settings.gameplay.coinRadius )
 				{
-					failed = true;
+					level.setCellAt( touchedTile, Tiles::getEmpty() );
+					++collectedCoins;
+				}
+
+				if ( level.getCellAt( touchedTile ) == Tiles::getOpenExit() && distance <= 0.1f )
+				{
+					completed = true;
+				}
+
+				for ( const Enemy& enemy : enemies )
+				{
+					if ( Vector2Distance( heroCenter, enemy.position ) <= settings.gameplay.enemyRadius )
+					{
+						failed = true;
+					}
 				}
 			}
 		}
