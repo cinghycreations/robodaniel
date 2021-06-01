@@ -1005,10 +1005,12 @@ private:
 			{
 				currentHandler = &GameFlow::credits;
 			}
+#ifdef __WINDOWS
 			if ( ImGui::CenteredButton( "Quit" ) )
 			{
 				shutdownRequested = true;
 			}
+#endif
 		}
 		ImGui::End();
 		popUiStyle();
