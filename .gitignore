@@ -2,3 +2,4 @@
 *.blend1
 imgui.ini
 build/storage.data
+.ninja_log
