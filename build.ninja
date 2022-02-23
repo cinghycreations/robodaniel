@@ -17,7 +17,7 @@ rule build_windows
   pool = console
 
 rule generate_html5
-  command = cmake -G "Ninja" -D CMAKE_MAKE_PROGRAM="$currentdir\ninja.exe" -D CMAKE_TOOLCHAIN_FILE="$emsdk\upstream\emscripten\cmake\Modules\Platform\Emscripten.cmake" -S "$currentdir" -B "$currentdir\temp\build\HTML5"
+  command = cmake -G "Ninja" -D CMAKE_MAKE_PROGRAM="$currentdir\ninja.exe" -D CMAKE_TOOLCHAIN_FILE="$emsdk\upstream\emscripten\cmake\Modules\Platform\Emscripten.cmake" -D CMAKE_BUILD_TYPE=Release -S "$currentdir" -B "$currentdir\temp\build\HTML5"
   pool = console
 
 rule clear_html5
@@ -25,7 +25,7 @@ rule clear_html5
   pool = console
 
 rule build_html5
-  command = cmake --build "$currentdir\temp\build\HTML5" --config "Release"
+  command = cmake --build "$currentdir\temp\build\HTML5"
   pool = console
 
 rule html5_launch_server
