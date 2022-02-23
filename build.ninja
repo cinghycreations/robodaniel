@@ -1,30 +1,27 @@
 currentdir = D:\Projects\robodaniel
 emsdk = D:\emsdk
 
-rule open_folder
-  command = explorer "$currentdir"
-
-rule generate_windows
+rule windows_generate
   command = cmake -G "Visual Studio 16 2019" -D CMAKE_CONFIGURATION_TYPES="RelWithDebInfo" -S "$currentdir" -B "$currentdir\temp\build\Windows"
   pool = console
 
-rule clear_windows
+rule windows_clear
   command = cmd /C rmdir /S /Q "$currentdir\temp\build\Windows"
   pool = console
 
-rule build_windows
+rule windows_build
   command = cmake --build "$currentdir\temp\build\Windows" --config "RelWithDebInfo"
   pool = console
 
-rule generate_html5
+rule html5_generate
   command = cmake -G "Ninja" -D CMAKE_MAKE_PROGRAM="$currentdir\ninja.exe" -D CMAKE_TOOLCHAIN_FILE="$emsdk\upstream\emscripten\cmake\Modules\Platform\Emscripten.cmake" -D CMAKE_BUILD_TYPE=Release -S "$currentdir" -B "$currentdir\temp\build\HTML5"
   pool = console
 
-rule clear_html5
+rule html5_clear
   command = cmd /C rmdir /S /Q "$currentdir\temp\build\HTML5"
   pool = console
 
-rule build_html5
+rule html5_build
   command = cmake --build "$currentdir\temp\build\HTML5"
   pool = console
 
@@ -32,11 +29,10 @@ rule html5_launch_server
   command = python -m http.server --directory "$currentdir\temp\build\HTML5\src\game"
   pool = console
 
-build open_folder: open_folder
-build generate_windows: generate_windows
-build clear_windows: clear_windows
-build build_windows: build_windows
-build generate_html5: generate_html5
-build clear_html5: clear_html5
-build build_html5: build_html5
+build windows_generate: windows_generate
+build windows_clear: windows_clear
+build windows_build: windows_build
+build html5_generate: html5_generate
+build html5_clear: html5_clear
+build html5_build: html5_build
 build html5_launch_server: html5_launch_server
