@@ -26,8 +26,11 @@ rule html5_build
   pool = console
 
 rule html5_launch_server
-  command = python -m http.server --directory "$currentdir\temp\build\HTML5\src\game"
+  command = python -m http.server --directory "$currentdir\temp\build\HTML5\src\robodaniel"
   pool = console
+
+rule html5_package
+  command = python -m zipfile --create "$currentdir\temp\robodaniel_html5.zip" "$currentdir\temp\build\HTML5\src\robodaniel\index.html" "$currentdir\temp\build\HTML5\src\robodaniel\index.js" "$currentdir\temp\build\HTML5\src\robodaniel\index.wasm" "$currentdir\temp\build\HTML5\src\robodaniel\index.data"
 
 build windows_generate: windows_generate
 build windows_clear: windows_clear
@@ -36,3 +39,4 @@ build html5_generate: html5_generate
 build html5_clear: html5_clear
 build html5_build: html5_build
 build html5_launch_server: html5_launch_server
+build html5_package: html5_package

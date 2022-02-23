@@ -1,5 +1,5 @@
 cmake_minimum_required( VERSION 3.16 )
-project( game )
+project( robodaniel )
 set( CMAKE_CXX_STANDARD 17 )
 
 add_compile_definitions( $<$<CONFIG:Release>:__RELEASE> )
@@ -17,9 +17,11 @@ endif ()
 
 add_subdirectory( raylib )
 add_subdirectory( src/ImGui )
-add_subdirectory( src/game )
+add_subdirectory( src/robodaniel )
 
-set_target_properties( game PROPERTIES OUTPUT_NAME robodaniel )
+if (EMSCRIPTEN)
+    set_target_properties( robodaniel PROPERTIES OUTPUT_NAME index )
+endif()
 
-install( TARGETS game DESTINATION "${CMAKE_INSTALL_PREFIX}" )
+install( TARGETS robodaniel DESTINATION "${CMAKE_INSTALL_PREFIX}" )
 install( DIRECTORY "build/" DESTINATION "${CMAKE_INSTALL_PREFIX}" PATTERN "imgui.ini" EXCLUDE PATTERN "storage.data" EXCLUDE )
