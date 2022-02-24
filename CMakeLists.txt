@@ -22,6 +22,3 @@ add_subdirectory( src/robodaniel )
 if (EMSCRIPTEN)
     set_target_properties( robodaniel PROPERTIES OUTPUT_NAME index )
 endif()
-
-install( TARGETS robodaniel DESTINATION "${CMAKE_INSTALL_PREFIX}" )
-install( DIRECTORY "build/" DESTINATION "${CMAKE_INSTALL_PREFIX}" PATTERN "imgui.ini" EXCLUDE PATTERN "storage.data" EXCLUDE )

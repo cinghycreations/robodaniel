@@ -1,42 +1,51 @@
 currentdir = D:\Projects\robodaniel
 emsdk = D:\emsdk
+7z = C:\Program Files\7-Zip\7z.exe
 
 rule windows_generate
-  command = cmake -G "Visual Studio 16 2019" -D CMAKE_CONFIGURATION_TYPES="RelWithDebInfo" -S "$currentdir" -B "$currentdir\temp\build\Windows"
+  command = cmake -G "Visual Studio 16 2019" -S "$currentdir" -B "$currentdir\temp\build\windows"
   pool = console
 
 rule windows_clear
-  command = cmd /C rmdir /S /Q "$currentdir\temp\build\Windows"
+  command = cmd /C rmdir /S /Q "$currentdir\temp\build\windows"
   pool = console
 
 rule windows_build
-  command = cmake --build "$currentdir\temp\build\Windows" --config "RelWithDebInfo"
+  command = cmake --build "$currentdir\temp\build\windows" --config "Release"
+  pool = console
+
+rule windows_package
+  command = $7z a "$currentdir\temp\robodaniel_windows.zip" "$currentdir\build\*" "$currentdir\temp\build\windows\src\robodaniel\Release\robodaniel.exe" -x!imgui.ini -x!storage.data
   pool = console
 
 rule html5_generate
-  command = cmake -G "Ninja" -D CMAKE_MAKE_PROGRAM="$currentdir\ninja.exe" -D CMAKE_TOOLCHAIN_FILE="$emsdk\upstream\emscripten\cmake\Modules\Platform\Emscripten.cmake" -D CMAKE_BUILD_TYPE=Release -S "$currentdir" -B "$currentdir\temp\build\HTML5"
+  command = cmake -G "Ninja" -D CMAKE_MAKE_PROGRAM="$currentdir\ninja.exe" -D CMAKE_TOOLCHAIN_FILE="$emsdk\upstream\emscripten\cmake\Modules\Platform\Emscripten.cmake" -D CMAKE_BUILD_TYPE=Release -S "$currentdir" -B "$currentdir\temp\build\html5"
   pool = console
 
 rule html5_clear
-  command = cmd /C rmdir /S /Q "$currentdir\temp\build\HTML5"
+  command = cmd /C rmdir /S /Q "$currentdir\temp\build\html5"
   pool = console
 
 rule html5_build
-  command = cmake --build "$currentdir\temp\build\HTML5"
+  command = cmake --build "$currentdir\temp\build\html5"
   pool = console
 
 rule html5_launch_server
-  command = python -m http.server --directory "$currentdir\temp\build\HTML5\src\robodaniel"
+  command = python -m http.server --directory "$currentdir\temp\build\html5\src\robodaniel"
   pool = console
 
 rule html5_package
-  command = python -m zipfile --create "$currentdir\temp\robodaniel_html5.zip" "$currentdir\temp\build\HTML5\src\robodaniel\index.html" "$currentdir\temp\build\HTML5\src\robodaniel\index.js" "$currentdir\temp\build\HTML5\src\robodaniel\index.wasm" "$currentdir\temp\build\HTML5\src\robodaniel\index.data"
+  command = $7z a "$currentdir\temp\robodaniel_html5.zip" "$currentdir\temp\build\html5\src\robodaniel\index.*"
+  pool = console
 
 build windows_generate: windows_generate
 build windows_clear: windows_clear
 build windows_build: windows_build
+build windows_package: windows_package
 build html5_generate: html5_generate
 build html5_clear: html5_clear
 build html5_build: html5_build
 build html5_launch_server: html5_launch_server
 build html5_package: html5_package
+build windows: phony windows_generate windows_build windows_package
+build html5: phony html5_generate html5_build html5_package
