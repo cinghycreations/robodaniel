@@ -966,6 +966,7 @@ public:
 	const Tiles& tiles;
 	const Settings& settings;
 	ImFont* uiFont;
+	bool screenChanged = false;
 	bool shutdownRequested = false;
 	Translator translator;
 
@@ -989,6 +990,7 @@ public:
 
 	void step()
 	{
+		screenChanged = false;
 		currentHandler( this );
 	}
 
@@ -1052,20 +1054,24 @@ private:
 			if ( ImGui::CenteredButton( translator.translate( "Play" ) ) )
 			{
 				nextLevel = 0;
+				screenChanged = true;
 				currentHandler = &GameFlow::initSession;
 			}
 			if ( ImGui::CenteredButton( translator.translate( "Select Level" ) ) )
 			{
 				auto bestTimes = loadBestTimes();
+				screenChanged = true;
 				currentHandler = std::bind( &GameFlow::selectLevel, this, bestTimes );
 			}
 			if ( ImGui::CenteredButton( translator.translate( "Best Times" ) ) )
 			{
 				auto bestTimes = loadBestTimes();
+				screenChanged = true;
 				currentHandler = std::bind( &GameFlow::showBestTimes, this, bestTimes );
 			}
 			if ( ImGui::CenteredButton( translator.translate( "Credits" ) ) )
 			{
+				screenChanged = true;
 				currentHandler = &GameFlow::credits;
 			}
 #ifdef __WINDOWS
@@ -1095,6 +1101,7 @@ private:
 					if ( ImGui::CenteredButton( caption ) )
 					{
 						nextLevel = i;
+						screenChanged = true;
 						currentHandler = &GameFlow::initSession;
 					}
 				} else
@@ -1104,6 +1111,7 @@ private:
 			}
 			if ( ImGui::CenteredButton( translator.translate( "Back" ) ) )
 			{
+				screenChanged = true;
 				currentHandler = &GameFlow::splashScreen;
 			}
 		}
@@ -1127,6 +1135,7 @@ private:
 			ImGui::CenteredText( "ProggyTiny font by Tristan Grimmer" );
 			if ( ImGui::CenteredButton( translator.translate( "Back" ) ) )
 			{
+				screenChanged = true;
 				currentHandler = &GameFlow::splashScreen;
 			}
 		}
@@ -1174,6 +1183,7 @@ private:
 			}
 			if ( ImGui::CenteredButton( translator.translate( "Back" ) ) )
 			{
+				screenChanged = true;
 				currentHandler = &GameFlow::splashScreen;
 			}
 		}
@@ -1188,6 +1198,7 @@ private:
 		session.reset( new Session( tiles, *level, settings ) );
 		bestTime = loadBestTime( nextLevel );
 
+		screenChanged = true;
 		currentHandler = &GameFlow::play;
 	}
 
@@ -1210,6 +1221,7 @@ private:
 				}
 				if ( ImGui::Button( translator.translate( "Back" ).c_str() ) )
 				{
+					screenChanged = true;
 					currentHandler = &GameFlow::splashScreen;
 				}
 			}
@@ -1268,6 +1280,7 @@ private:
 					level.reset();
 
 					++nextLevel;
+					screenChanged = true;
 					currentHandler = &GameFlow::initSession;
 				}
 			}
@@ -1276,6 +1289,7 @@ private:
 				session.reset();
 				level.reset();
 
+				screenChanged = true;
 				currentHandler = &GameFlow::initSession;
 			}
 			if ( ImGui::CenteredButton( translator.translate( "Main Menu" ) ) )
@@ -1283,6 +1297,7 @@ private:
 				session.reset();
 				level.reset();
 
+				screenChanged = true;
 				currentHandler = &GameFlow::splashScreen;
 			}
 		}
@@ -1306,10 +1321,12 @@ private:
 				session.reset();
 				level.reset();
 
+				screenChanged = true;
 				currentHandler = &GameFlow::initSession;
 			}
 			if ( ImGui::CenteredButton( translator.translate( "Main Menu" ) ) )
 			{
+				screenChanged = true;
 				currentHandler = &GameFlow::splashScreen;
 			}
 		}
@@ -1355,6 +1372,24 @@ int main()
 		io.Fonts->SetTexID( &fontTexture.id );
 		UnloadImage( image );
 	}
+
+	array<Texture2D, 3> cloudTextures;
+	cloudTextures[ 0 ] = LoadTexture( "cloud1.png" );
+	cloudTextures[ 1 ] = LoadTexture( "cloud2.png" );
+	cloudTextures[ 2 ] = LoadTexture( "cloud3.png" );
+
+	typedef tuple<int, int, int> Cloud;
+	vector<Cloud> clouds;
+
+	auto regenClouds = [&clouds, &cloudTextures]()
+	{
+		clouds.clear();
+		for ( int i = 0; i < 30; ++i )
+		{
+			clouds.push_back( { rand() % GetScreenWidth(), rand() % GetScreenHeight(), rand() % cloudTextures.size() } );
+		}
+	};
+	regenClouds();
 
 	Tiles tiles( "tiles.png", 128 );
 	Settings settings;
@@ -1425,8 +1460,21 @@ int main()
 
 		BeginDrawing();
 		{
-			ClearBackground( RAYWHITE );
+			const Color bgColor{ 208, 244, 247, 255 };
+			ClearBackground( bgColor );
+
+			for ( const auto& cloud : clouds )
+			{
+				DrawTextureEx( cloudTextures.at( get<2>( cloud ) ), Vector2{ float( get<0>( cloud ) ), float( get<1>( cloud ) ) }, 0, 2, WHITE );
+			}
+
 			flow.step();
+
+			if ( flow.screenChanged )
+			{
+				regenClouds();
+			}
+
 			if ( flow.shutdownRequested )
 			{
 				break;
