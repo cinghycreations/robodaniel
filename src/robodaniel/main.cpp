@@ -16,6 +16,7 @@
 
 #include <imgui.h>
 #include <cimgui_impl_raylib.hpp>
+#include <json.hpp>
 
 using namespace std;
 
@@ -40,28 +41,28 @@ namespace ImGui {
 		ImGui::SetNextWindowSize( ImVec2( windowWidth, 0 ) );
 	}
 
-	bool CenteredButton( const char* label )
+	bool CenteredButton( const string& label )
 	{
-		const ImVec2 textSize = ImGui::CalcTextSize( label );
+		const ImVec2 textSize = ImGui::CalcTextSize( label.c_str() );
 		ImGui::NewLine();
 		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
-		return ImGui::Button( label );
+		return ImGui::Button( label.c_str() );
 	}
 
-	void CenteredText( const char* label )
+	void CenteredText( const string& label )
 	{
-		const ImVec2 textSize = ImGui::CalcTextSize( label );
+		const ImVec2 textSize = ImGui::CalcTextSize( label.c_str() );
 		ImGui::NewLine();
 		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
-		ImGui::Text( label );
+		ImGui::Text( label.c_str() );
 	}
 
-	void CenteredTextDisabled( const char* label )
+	void CenteredTextDisabled( const string& label )
 	{
-		const ImVec2 textSize = ImGui::CalcTextSize( label );
+		const ImVec2 textSize = ImGui::CalcTextSize( label.c_str() );
 		ImGui::NewLine();
 		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
-		ImGui::TextDisabled( label );
+		ImGui::TextDisabled( label.c_str() );
 	}
 
 #ifdef __RELEASE
@@ -632,6 +633,52 @@ struct Settings
 	} debug;
 };
 
+enum class Language
+{
+	English,
+	Italian,
+};
+
+class Translator
+{
+public:
+	void setLanguage( const Language _language )
+	{
+		language = _language;
+
+		string languageCode;
+		if (language == Language::Italian)
+		{
+			languageCode = "it";
+		}
+
+		nlohmann::json allLanguages;
+		ifstream stream( "languages.json" );
+		stream >> allLanguages;
+
+		database = nlohmann::json{};
+		if (allLanguages.count( languageCode ))
+		{
+			database = allLanguages.at( languageCode );
+		}
+	}
+
+	Language getLanguage() const
+	{
+		return language;
+	}
+
+	string translate( const string& source ) const
+	{
+		return database.count( source ) ? database.at( source ).get<string>() : source;
+	}
+
+private:
+
+	Language language = Language::English;
+	nlohmann::json database;
+};
+
 class Session
 {
 public:
@@ -920,6 +967,7 @@ public:
 	const Settings& settings;
 	ImFont* uiFont;
 	bool shutdownRequested = false;
+	Translator translator;
 
 	GameFlow( const Tiles& _tiles, const Settings& _settings, ImFont* _uiFont ) : tiles( _tiles ), settings( _settings ), uiFont( _uiFont )
 	{
@@ -935,6 +983,8 @@ public:
 				SaveStorageValue( i + 1, 0 );
 			}
 		}
+
+		translator.setLanguage( Language::English );
 	}
 
 	void step()
@@ -982,31 +1032,44 @@ private:
 	{
 		pushUiStyle();
 
-		ImGui::CenterWindowForText( "Robodaniel" );
+		ImGui::CenterWindowForText( "____Robodaniel____" );
 		if ( ImGui::Begin( "Splash Screen", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::CenteredText( "Robodaniel" );
-			if ( ImGui::CenteredButton( "Play" ) )
+			if (translator.getLanguage() == Language::English)
+			{
+				if (ImGui::CenteredButton( "Italiano" ))
+				{
+					translator.setLanguage( Language::Italian );
+				}
+			} else if (translator.getLanguage() == Language::Italian)
+			{
+				if (ImGui::CenteredButton( "English" ))
+				{
+					translator.setLanguage( Language::English );
+				}
+			}
+			if ( ImGui::CenteredButton( translator.translate("Play") ) )
 			{
 				nextLevel = 0;
 				currentHandler = &GameFlow::initSession;
 			}
-			if ( ImGui::CenteredButton( "Select Level" ) )
+			if ( ImGui::CenteredButton( translator.translate("Select Level") ) )
 			{
 				auto bestTimes = loadBestTimes();
 				currentHandler = std::bind( &GameFlow::selectLevel, this, bestTimes );
 			}
-			if ( ImGui::CenteredButton( "Best Times" ) )
+			if ( ImGui::CenteredButton( translator.translate("Best Times") ) )
 			{
 				auto bestTimes = loadBestTimes();
 				currentHandler = std::bind( &GameFlow::showBestTimes, this, bestTimes );
 			}
-			if ( ImGui::CenteredButton( "Credits" ) )
+			if ( ImGui::CenteredButton( translator.translate("Credits") ) )
 			{
 				currentHandler = &GameFlow::credits;
 			}
 #ifdef __WINDOWS
-			if ( ImGui::CenteredButton( "Quit" ) )
+			if ( ImGui::CenteredButton( translator.translate("Quit") ) )
 			{
 				shutdownRequested = true;
 			}
@@ -1025,7 +1088,7 @@ private:
 			for ( int i = 0; i < maxLevels; ++i )
 			{
 				char caption[ 32 ];
-				sprintf( caption, "Level %2d", i + 1 );
+				sprintf( caption, translator.translate("Level %2d").c_str(), i + 1 );
 
 				if ( bestTimes.at( i ).has_value() || ( i == 0 ) || ( i > 0 && bestTimes.at( i - 1 ).has_value() ) )
 				{
@@ -1039,7 +1102,7 @@ private:
 					ImGui::CenteredTextDisabled( caption );
 				}
 			}
-			if ( ImGui::CenteredButton( "Back" ) )
+			if ( ImGui::CenteredButton( translator.translate("Back") ) )
 			{
 				currentHandler = &GameFlow::splashScreen;
 			}
@@ -1062,7 +1125,7 @@ private:
 			ImGui::CenteredText( "Tile art by Kenney Vleugels" );
 			ImGui::CenteredText( "Robot art by GameArt2D.com" );
 			ImGui::CenteredText( "ProggyTiny font by Tristan Grimmer" );
-			if ( ImGui::CenteredButton( "Back" ) )
+			if ( ImGui::CenteredButton( translator.translate("Back") ) )
 			{
 				currentHandler = &GameFlow::splashScreen;
 			}
@@ -1094,22 +1157,22 @@ private:
 			{
 				if ( bestTimes.at( i ).has_value() )
 				{
-					ImGui::Text( "Level %2d      %7.3f s", i + 1, *bestTimes.at( i ) );
+					ImGui::Text( translator.translate("Level %2d      %7.3f s").c_str(), i + 1, *bestTimes.at( i ) );
 					total += *bestTimes.at( i );
 				} else
 				{
-					ImGui::Text( "Level %2d      ------- s", i + 1 );
+					ImGui::Text( translator.translate("Level %2d      ------- s").c_str(), i + 1 );
 					hasTotal = false;
 				}
 			}
 			if ( hasTotal )
 			{
-				ImGui::Text( "Total         %7.3f s", total );
+				ImGui::Text( translator.translate("Total         %7.3f s").c_str(), total );
 			} else
 			{
-				ImGui::Text( "Total         ------- s" );
+				ImGui::Text( translator.translate("Total         ------- s").c_str() );
 			}
-			if ( ImGui::CenteredButton( "Back" ) )
+			if ( ImGui::CenteredButton( translator.translate("Back") ) )
 			{
 				currentHandler = &GameFlow::splashScreen;
 			}
@@ -1139,13 +1202,13 @@ private:
 			pushUiStyle();
 			if ( ImGui::Begin( "HUD", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 			{
-				ImGui::Text( "Coins: %2d/%2d", session->collectedCoins, session->totalCoins );
-				ImGui::Text( "Time %7.3f", session->totalTime );
+				ImGui::Text( translator.translate("Coins %2d/%2d").c_str(), session->collectedCoins, session->totalCoins );
+				ImGui::Text( translator.translate("Time %7.3f").c_str(), session->totalTime );
 				if ( bestTime.has_value() )
 				{
-					ImGui::Text( "Best %7.3f", *bestTime );
+					ImGui::Text( translator.translate("Best %7.3f").c_str(), *bestTime );
 				}
-				if ( ImGui::Button( "Back" ) )
+				if ( ImGui::Button( translator.translate("Back").c_str() ) )
 				{
 					currentHandler = &GameFlow::splashScreen;
 				}
@@ -1189,17 +1252,17 @@ private:
 		EndMode2D();
 
 		pushUiStyle();
-		ImGui::CenterWindowForText( "Level completed in xx.xxx seconds!" );
+		ImGui::CenterWindowForText( "_Level completed in xx.xxx seconds!_" );
 		if ( ImGui::Begin( "Session completed", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
-			ImGui::Text( "Level completed in %.3f seconds!", session->totalTime );
+			ImGui::Text( translator.translate("Level completed in %.3f seconds!").c_str(), session->totalTime );
 			if ( !bestTime.has_value() || session->totalTime < *bestTime )
 			{
-				ImGui::CenteredText( "New best time!" );
+				ImGui::CenteredText( translator.translate("New best time!") );
 			}
 			if ( nextLevel + 1 < maxLevels )
 			{
-				if ( ImGui::CenteredButton( "Next Level" ) )
+				if ( ImGui::CenteredButton( translator.translate("Next Level") ) )
 				{
 					session.reset();
 					level.reset();
@@ -1208,14 +1271,14 @@ private:
 					currentHandler = &GameFlow::initSession;
 				}
 			}
-			if ( ImGui::CenteredButton( "Retry" ) )
+			if ( ImGui::CenteredButton( translator.translate("Retry") ) )
 			{
 				session.reset();
 				level.reset();
 
 				currentHandler = &GameFlow::initSession;
 			}
-			if ( ImGui::CenteredButton( "Main Menu" ) )
+			if ( ImGui::CenteredButton( translator.translate("Main Menu") ) )
 			{
 				session.reset();
 				level.reset();
@@ -1234,18 +1297,18 @@ private:
 		EndMode2D();
 
 		pushUiStyle();
-		ImGui::CenterWindowForText( "Level failed!" );
+		ImGui::CenterWindowForText( "__Level failed!__" );
 		if ( ImGui::Begin( "Session failed", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
-			ImGui::CenteredText( "Level failed!" );
-			if ( ImGui::CenteredButton( "Retry" ) )
+			ImGui::CenteredText( translator.translate("Level failed!") );
+			if ( ImGui::CenteredButton( translator.translate("Retry") ) )
 			{
 				session.reset();
 				level.reset();
 
 				currentHandler = &GameFlow::initSession;
 			}
-			if ( ImGui::CenteredButton( "Main Menu" ) )
+			if ( ImGui::CenteredButton( translator.translate("Main Menu") ) )
 			{
 				currentHandler = &GameFlow::splashScreen;
 			}

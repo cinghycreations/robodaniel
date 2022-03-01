@@ -1,0 +1,24 @@
+{
+	"it": {
+		"Play": "Gioca",
+		"Select Level": "Seleziona Livello",
+		"Best Times": "Tempi Migliori",
+		"Credits": "Crediti",
+		"Quit": "Esci",
+		"Level %2d": "Livello %2d",
+		"Level %2d      %7.3f s": "Livello %2d    %7.3f s",
+		"Level %2d      ------- s": "Livello %2d    ------- s",
+		"Total         %7.3f s": "Totale        %7.3f s",
+		"Total         ------- s": "Totale        ------- s",
+		"Back": "Indietro",
+		"Coins %2d/%2d": "Monete %2d/%2d",
+		"Time %7.3f": "Tempo  %7.3f",
+		"Best %7.3f": "Record %7.3f",
+		"Level completed in %.3f seconds!": "Livello completato in %.3f secondi!",
+		"New best time!": "Nuovo record!",
+		"Next Level": "Prossimo Livello",
+		"Retry": "Riprova",
+		"Main Menu": "Menu Principale",
+		"Level failed!": "Livello fallito!"
+	}
+}
