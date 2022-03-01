@@ -7,7 +7,9 @@ add_executable( robodaniel
 	main.cpp
 	droidsans.cpp
 	proggytiny.cpp
+	json.hpp
 )
 
 target_include_directories( robodaniel PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" )
 target_link_libraries( robodaniel PUBLIC ImGui raylib )
+target_precompile_headers( robodaniel PUBLIC <json.hpp> )
