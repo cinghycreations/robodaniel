@@ -1122,15 +1122,16 @@ private:
 	void credits()
 	{
 		pushUiStyle();
-		ImGui::CenterWindowForText( "ProggyTiny font by Tristan Grimmer" );
+		ImGui::CenterWindowForText( "Tile and cloud art by Kenney Vleugels" );
 		if ( ImGui::Begin( "Best times", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::CenteredText( "Robodaniel v" BUILD_VERSION );
-			ImGui::CenteredText( "Copyright (c) 2021 Alessandro Piva" );
+			ImGui::CenteredText( "Copyright (c) 2022 Alessandro Piva" );
 			ImGui::CenteredText( "" );
 			ImGui::CenteredText( "raylib by Ramon Santamaria" );
 			ImGui::CenteredText( "ImGui by Omar Cornut" );
-			ImGui::CenteredText( "Tile art by Kenney Vleugels" );
+			ImGui::CenteredText( "JSON for Modern C++ by Niels Lohmann" );
+			ImGui::CenteredText( "Tile and cloud art by Kenney Vleugels" );
 			ImGui::CenteredText( "Robot art by GameArt2D.com" );
 			ImGui::CenteredText( "ProggyTiny font by Tristan Grimmer" );
 			if ( ImGui::CenteredButton( translator.translate( "Back" ) ) )
