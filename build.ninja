@@ -38,14 +38,22 @@ rule html5_package
   command = $7z a "$currentdir\temp\robodaniel_html5.zip" "$currentdir\temp\build\html5\src\robodaniel\index.*"
   pool = console
 
-build windows_generate: windows_generate
+build temp\build\windows\robodaniel.sln: windows_generate
+build temp\build\windows\src\robodaniel\Release\robodaniel.exe: windows_build | temp\build\windows\robodaniel.sln
+build temp\robodaniel_windows.zip: windows_package | temp\build\windows\src\robodaniel\Release\robodaniel.exe
+build windows_generate: phony temp\build\windows\robodaniel.sln
+build windows_build: phony temp\build\windows\src\robodaniel\Release\robodaniel.exe
+build windows_package: phony temp\robodaniel_windows.zip
 build windows_clear: windows_clear
-build windows_build: windows_build
-build windows_package: windows_package
-build html5_generate: html5_generate
+
+build temp\build\html5\build.ninja: html5_generate
+build temp\build\html5\src\robodaniel\index.html: html5_build | temp\build\html5\build.ninja
+build temp\robodaniel_html5.zip: html5_package | temp\build\html5\src\robodaniel\index.html
+build html5_generate: phony temp\build\html5\build.ninja
+build html5_build: phony temp\build\html5\src\robodaniel\index.html
+build html5_package: phony temp\robodaniel_html5.zip
 build html5_clear: html5_clear
-build html5_build: html5_build
 build html5_launch_server: html5_launch_server
-build html5_package: html5_package
-build windows: phony windows_generate windows_build windows_package
-build html5: phony html5_generate html5_build html5_package
+
+build packages: phony windows_package html5_package
+default packages
