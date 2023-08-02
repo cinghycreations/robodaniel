@@ -1,9 +1,9 @@
-currentdir = D:\Projects\robodaniel
+currentdir = C:\Projects\robodaniel
 emsdk = D:\emsdk
 7z = C:\Program Files\7-Zip\7z.exe
 
 rule windows_generate
-  command = cmake -G "Visual Studio 16 2019" -S "$currentdir" -B "$currentdir\temp\build\windows"
+  command = cmake -S "$currentdir" -B "$currentdir\temp\build\windows"
   pool = console
 
 rule windows_clear
