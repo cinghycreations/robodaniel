@@ -1126,7 +1126,7 @@ private:
 		if ( ImGui::Begin( "Best times", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings ) )
 		{
 			ImGui::CenteredText( "Robodaniel v" BUILD_VERSION );
-			ImGui::CenteredText( "Copyright (c) 2022 Alessandro Piva" );
+			ImGui::CenteredText( "Copyright (c) 2022-2023 Cinghy Creations" );
 			ImGui::CenteredText( "" );
 			ImGui::CenteredText( "raylib by Ramon Santamaria" );
 			ImGui::CenteredText( "ImGui by Omar Cornut" );

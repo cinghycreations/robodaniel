@@ -3,7 +3,7 @@ project( robodaniel )
 set( CMAKE_CXX_STANDARD 17 )
 
 add_compile_definitions( $<$<CONFIG:Release>:__RELEASE> )
-add_compile_definitions( BUILD_VERSION="1.1" )
+add_compile_definitions( BUILD_VERSION="1.1.1" )
 
 if (WIN32)
     add_compile_definitions( __WINDOWS )
