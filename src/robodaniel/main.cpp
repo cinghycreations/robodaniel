@@ -1399,15 +1399,10 @@ int main()
 	rlImGuiSetup(true);
 	ImFont* uiFont = nullptr;
 	{
-		extern unsigned int droidsans_compressed_size;
-		extern unsigned int droidsans_compressed_data[];
-		extern unsigned int proggytiny_compressed_size;
-		extern unsigned int proggytiny_compressed_data[];
-
 		ImGuiIO& io = ImGui::GetIO();
 		io.Fonts->Clear();
-		io.Fonts->AddFontFromMemoryCompressedTTF( droidsans_compressed_data, droidsans_compressed_size, 18.0f );
-		uiFont = io.Fonts->AddFontFromMemoryCompressedTTF( proggytiny_compressed_data, proggytiny_compressed_size, 48.0f );
+		io.Fonts->AddFontFromFileTTF( "DroidSans.ttf", 24.0f );
+		uiFont = io.Fonts->AddFontFromFileTTF( "ProggyTiny.ttf", 48.0f );
 		rlImGuiReloadFonts();
 	}
 
