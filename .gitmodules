@@ -7,3 +7,6 @@
 [submodule "ext/imgui"]
 	path = ext/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "ext/rlImGui"]
+	path = ext/rlImGui
+	url = https://github.com/raylib-extras/rlImGui.git

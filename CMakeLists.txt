@@ -33,16 +33,18 @@ add_library( ImGui STATIC
 )
 target_include_directories( ImGui PUBLIC "${CMAKE_SOURCE_DIR}/ext/ImGui" )
 
+add_library( rlImGui ext/rlImGui/rlImGui.h ext/rlImGui/rlImGui.cpp ext/rlImGui/rlImGuiColors.h )
+target_link_libraries( rlImGui PUBLIC raylib ImGui )
+target_include_directories( rlImGui PUBLIC "${CMAKE_SOURCE_DIR}/ext/rlImGui" )
+
 add_executable( robodaniel
-	src/robodaniel/cimgui_impl_raylib.cpp
-	src/robodaniel/cimgui_impl_raylib.hpp
 	src/robodaniel/intmath.hpp
 	src/robodaniel/main.cpp
 	src/robodaniel/droidsans.cpp
 	src/robodaniel/proggytiny.cpp
 )
 target_include_directories( robodaniel PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/robodaniel" )
-target_link_libraries( robodaniel PUBLIC ImGui raylib nlohmann_json )
+target_link_libraries( robodaniel PUBLIC ImGui rlImGui raylib nlohmann_json )
 target_precompile_headers( robodaniel PUBLIC <raylib.h> <nlohmann/json.hpp> )
 
 if (EMSCRIPTEN)
