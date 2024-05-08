@@ -1,0 +1,9 @@
+[submodule "ext/raylib"]
+	path = ext/raylib
+	url = https://github.com/raysan5/raylib.git
+[submodule "ext/json"]
+	path = ext/json
+	url = https://github.com/nlohmann/json.git
+[submodule "ext/imgui"]
+	path = ext/imgui
+	url = https://github.com/ocornut/imgui.git

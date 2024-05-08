@@ -1,9 +1,9 @@
 cmake_minimum_required( VERSION 3.16 )
-project( robodaniel )
 set( CMAKE_CXX_STANDARD 17 )
+project( robodaniel VERSION 1.1.1 )
 
 add_compile_definitions( $<$<CONFIG:Release>:__RELEASE> )
-add_compile_definitions( BUILD_VERSION="1.1.1" )
+add_compile_definitions( BUILD_VERSION="${PROJECT_VERSION}" )
 
 if (WIN32)
     add_compile_definitions( __WINDOWS )
@@ -15,9 +15,35 @@ elseif (EMSCRIPTEN)
     set( CMAKE_EXECUTABLE_SUFFIX ".html" )
 endif ()
 
-add_subdirectory( raylib )
-add_subdirectory( src/ImGui )
-add_subdirectory( src/robodaniel )
+add_subdirectory( ext/raylib EXCLUDE_FROM_ALL )
+add_subdirectory( ext/json EXCLUDE_FROM_ALL )
+
+add_library( ImGui STATIC
+	ext/ImGui/imconfig.h
+	ext/ImGui/imgui.cpp
+	ext/ImGui/imgui.h
+	ext/ImGui/imgui_demo.cpp
+	ext/ImGui/imgui_draw.cpp
+	ext/ImGui/imgui_internal.h
+	ext/ImGui/imgui_tables.cpp
+	ext/ImGui/imgui_widgets.cpp
+	ext/ImGui/imstb_rectpack.h
+	ext/ImGui/imstb_textedit.h
+	ext/ImGui/imstb_truetype.h
+)
+target_include_directories( ImGui PUBLIC "${CMAKE_SOURCE_DIR}/ext/ImGui" )
+
+add_executable( robodaniel
+	src/robodaniel/cimgui_impl_raylib.cpp
+	src/robodaniel/cimgui_impl_raylib.hpp
+	src/robodaniel/intmath.hpp
+	src/robodaniel/main.cpp
+	src/robodaniel/droidsans.cpp
+	src/robodaniel/proggytiny.cpp
+)
+target_include_directories( robodaniel PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/robodaniel" )
+target_link_libraries( robodaniel PUBLIC ImGui raylib nlohmann_json )
+target_precompile_headers( robodaniel PUBLIC <raylib.h> <nlohmann/json.hpp> )
 
 if (EMSCRIPTEN)
     set_target_properties( robodaniel PROPERTIES OUTPUT_NAME index )
