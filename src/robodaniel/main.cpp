@@ -960,6 +960,21 @@ private:
 	}
 };
 
+struct BestTime
+{
+	int level;
+	float time;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(BestTime, level, time);
+};
+
+struct Savegame
+{
+	std::vector<BestTime> bestTimes;
+
+	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Savegame, bestTimes);
+};
+
 class GameFlow
 {
 public:
@@ -973,17 +988,6 @@ public:
 	GameFlow( const Tiles& _tiles, const Settings& _settings, ImFont* _uiFont ) : tiles( _tiles ), settings( _settings ), uiFont( _uiFont )
 	{
 		currentHandler = &GameFlow::splashScreen;
-
-		// Workaround for LoadStorageValue() returning random value for slots where we never called SaveStorageValue(), except for when the savegame if absent altogether
-		int hasSavegame = LoadStorageValue( 0 );
-		if ( !hasSavegame )
-		{
-			SaveStorageValue( 0, 1 );
-			for ( int i = 0; i < maxLevels; ++i )
-			{
-				SaveStorageValue( i + 1, 0 );
-			}
-		}
 
 		translator.setLanguage( Language::English );
 	}
@@ -1018,16 +1022,67 @@ private:
 		ImGui::PopFont();
 	}
 
+	static std::filesystem::path getSavegamePath() {
+#ifdef __WINDOWS
+		const std::filesystem::path home = std::getenv("APPDATA");
+#else
+		const std::filesystem::path home = std::getenv("HOME");
+#endif
+		return home / ".robodaniel" / "savegame.json";
+	}
+
 	void saveBestTime( const int level, const float bestTime )
 	{
-		const int timeMs = int( bestTime * 1000 );
-		SaveStorageValue( level + 1, timeMs );
+		Savegame savegame;
+
+		if (std::filesystem::exists(getSavegamePath())) {
+			std::ifstream stream(getSavegamePath());
+			nlohmann::json json;
+			stream >> json;
+			savegame = json;
+		}
+
+		bool present = false;
+		for (BestTime& best_time : savegame.bestTimes) {
+			if (best_time.level == level) {
+				best_time.time = bestTime;
+				present = true;
+			}
+		}
+
+		if (!present) {
+			savegame.bestTimes.push_back(BestTime{ level, bestTime });
+		}
+
+		{
+			std::error_code ec;
+			std::filesystem::create_directories(getSavegamePath().parent_path(), ec);
+
+			std::ofstream stream(getSavegamePath());
+			nlohmann::json json;
+			json = savegame;
+			stream << json;
+		}
 	}
 
 	optional<float> loadBestTime( const int level )
 	{
-		const int timeMs = LoadStorageValue( level + 1 );
-		return timeMs == 0 ? optional<float>() : optional<float>( float( timeMs ) / 1000 );
+		if (std::filesystem::exists(getSavegamePath())) {
+			Savegame savegame;
+
+			std::ifstream stream(getSavegamePath());
+			nlohmann::json json;
+			stream >> json;
+			savegame = json;
+
+			for (BestTime& best_time : savegame.bestTimes) {
+				if (best_time.level == level) {
+					return best_time.time;
+				}
+			}
+		}
+		
+		return std::nullopt;
 	}
 
 	void splashScreen()
