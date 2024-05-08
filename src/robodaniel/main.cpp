@@ -45,7 +45,7 @@ namespace ImGui {
 	{
 		const ImVec2 textSize = ImGui::CalcTextSize( label.c_str() );
 		ImGui::NewLine();
-		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
+		ImGui::SameLine( ( ImGui::GetContentRegionAvail().x - textSize.x ) / 2 );
 		return ImGui::Button( label.c_str() );
 	}
 
@@ -53,7 +53,7 @@ namespace ImGui {
 	{
 		const ImVec2 textSize = ImGui::CalcTextSize( label.c_str() );
 		ImGui::NewLine();
-		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
+		ImGui::SameLine( ( ImGui::GetContentRegionAvail().x - textSize.x ) / 2 );
 		ImGui::Text( label.c_str() );
 	}
 
@@ -61,7 +61,7 @@ namespace ImGui {
 	{
 		const ImVec2 textSize = ImGui::CalcTextSize( label.c_str() );
 		ImGui::NewLine();
-		ImGui::SameLine( ( ImGui::GetContentRegionAvailWidth() - textSize.x ) / 2 );
+		ImGui::SameLine( ( ImGui::GetContentRegionAvail().x - textSize.x ) / 2 );
 		ImGui::TextDisabled( label.c_str() );
 	}
 
