@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.16 )
 set( CMAKE_CXX_STANDARD 17 )
-project( robodaniel VERSION 1.1.1 )
+project( robodaniel VERSION 1.2 )
 
 add_compile_definitions( __RELEASE=$<IF:$<CONFIG:Release>,1,0> )
 add_compile_definitions( __ANDROID=$<IF:$<PLATFORM_ID:Android>,1,0> )
