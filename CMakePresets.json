@@ -99,6 +99,7 @@
         "CMAKE_C_FLAGS": "-s ASYNCIFY",
         "CMAKE_EXE_LINKER_FLAGS": "-s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 --preload-file ${sourceDir}/build@/ --shell-file C:/emsdk/upstream/emscripten/src/shell_minimal.html",
         "CMAKE_MAKE_PROGRAM": "${sourceDir}/temp/ninja.exe",
+        "CMAKE_EXECUTABLE_SUFFIX_CXX": ".html",
         "PLATFORM": "Web"
       }
     }

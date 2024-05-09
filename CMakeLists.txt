@@ -8,10 +8,6 @@ add_compile_definitions( __LINUX=$<IF:$<PLATFORM_ID:Linux>,1,0> )
 add_compile_definitions( __WEB=$<IF:$<PLATFORM_ID:Emscripten>,1,0> )
 add_compile_definitions( BUILD_VERSION="${PROJECT_VERSION}" )
 
-if (EMSCRIPTEN)
-	set( CMAKE_EXECUTABLE_SUFFIX ".html" )
-endif ()
-
 add_subdirectory( ext/raylib EXCLUDE_FROM_ALL )
 add_subdirectory( ext/json EXCLUDE_FROM_ALL )
 
@@ -34,11 +30,7 @@ add_library( rlImGui ext/rlImGui/rlImGui.h ext/rlImGui/rlImGui.cpp ext/rlImGui/r
 target_link_libraries( rlImGui PUBLIC raylib ImGui )
 target_include_directories( rlImGui PUBLIC "${CMAKE_SOURCE_DIR}/ext/rlImGui" )
 
-add_executable( robodaniel
-	src/robodaniel/intmath.hpp
-	src/robodaniel/main.cpp
-)
+add_executable( robodaniel src/robodaniel/intmath.hpp src/robodaniel/main.cpp )
 target_include_directories( robodaniel PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/robodaniel" )
 target_link_libraries( robodaniel PUBLIC ImGui rlImGui raylib nlohmann_json )
 target_precompile_headers( robodaniel PUBLIC <raylib.h> <nlohmann/json.hpp> )
-
