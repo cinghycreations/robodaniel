@@ -1393,8 +1393,8 @@ private:
 
 int main()
 {
+	SetConfigFlags( FLAG_WINDOW_RESIZABLE );
 	InitWindow( 1280, 720, "Game" );
-	SetWindowState( FLAG_WINDOW_RESIZABLE );
 
 	rlImGuiSetup(true);
 	ImFont* uiFont = nullptr;

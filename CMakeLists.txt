@@ -43,6 +43,3 @@ target_include_directories( robodaniel PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src/r
 target_link_libraries( robodaniel PUBLIC ImGui rlImGui raylib nlohmann_json )
 target_precompile_headers( robodaniel PUBLIC <raylib.h> <nlohmann/json.hpp> )
 
-if (EMSCRIPTEN)
-    set_target_properties( robodaniel PROPERTIES OUTPUT_NAME index )
-endif()
