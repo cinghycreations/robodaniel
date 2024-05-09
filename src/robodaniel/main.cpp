@@ -65,7 +65,7 @@ namespace ImGui {
 		ImGui::TextDisabled( label.c_str() );
 	}
 
-#ifdef __RELEASE
+#if __RELEASE
 	bool BeginDevMenuBar()
 	{
 		return false;
@@ -1023,7 +1023,7 @@ private:
 	}
 
 	static std::filesystem::path getSavegamePath() {
-#ifdef __WINDOWS
+#if __WINDOWS
 		const std::filesystem::path home = std::getenv("APPDATA");
 #else
 		const std::filesystem::path home = std::getenv("HOME");
@@ -1129,7 +1129,7 @@ private:
 				screenChanged = true;
 				currentHandler = &GameFlow::credits;
 			}
-#ifdef __WINDOWS
+#if __WINDOWS || __LINUX
 			if ( ImGui::CenteredButton( translator.translate( "Quit" ) ) )
 			{
 				shutdownRequested = true;
